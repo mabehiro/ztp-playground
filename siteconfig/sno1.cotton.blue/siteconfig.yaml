@@ -31,7 +31,7 @@ spec:
       - cidr: 10.128.0.0/14
         hostPrefix: 23
     machineNetwork:
-      - cidr: 192.168.86.0/24
+      - cidr: 192.168.1.0/24
     serviceNetwork:
       - 172.30.0.0/16
     additionalNTPSources:
@@ -44,17 +44,17 @@ spec:
     nodes:
       - hostName: "sno1.cotton.blue"
         role: "master"
-        bmcAddress: "redfish-virtualmedia+http://192.168.86.49:8000/redfish/v1/Systems/0bfc362b-62ef-4599-9c89-2366b02116c8"
+        bmcAddress: "redfish-virtualmedia://192.168.1.62/redfish/v1/Systems/1"
         bmcCredentialsName:
           name: "sno-bmc-secret"
-        bootMACAddress: "52:54:00:81:d9:72"
+        bootMACAddress: "70:10:6f:4f:ee:c6"
         bootMode: "UEFI"
         rootDeviceHints:
-          deviceName: "/dev/vda"
+          deviceName: "/dev/sda"
         nodeNetwork:
           interfaces:
             - name: "ens1s0"
-              macAddress: "52:54:00:81:d9:72"
+              macAddress: "70:10:6f:4f:ee:c4"
           config:
             interfaces:
               - name: ens1s0
@@ -64,19 +64,19 @@ spec:
                   enabled: true
                   dhcp: false
                   address:
-                  - ip: 192.168.86.132
+                  - ip: 192.168.1.170
                     prefix-length: 24
             dns-resolver:
                config:
                  search:
                  - cotton.blue
                  server:
-                 - 192.168.86.67
+                 - 192.168.1.1
             routes:
               config:
               - destination: 0.0.0.0/0
                 next-hop-interface: ens1s0
-                next-hop-address: 192.168.86.1
+                next-hop-address: 192.168.1.1
                 table-id: 254
         # diskPartition:
         # - device: /dev/vdb
