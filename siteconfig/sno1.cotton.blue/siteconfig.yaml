@@ -44,7 +44,7 @@ spec:
     nodes:
       - hostName: "sno1.cotton.blue"
         role: "master"
-        bmcAddress: "ilo4-virtualmedia://192.168.1.62:17988"
+        bmcAddress: "ilo4-virtualmedia://192.168.1.62"
         bmcCredentialsName:
           name: "sno-bmc-secret"
         bootMACAddress: "70:10:6f:4f:ee:c6"
