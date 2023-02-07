@@ -1,6 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+generators:
+  - siteconfig.yaml
+
 resources:
-  # - sno1.cotton.blue
-  - sno2.cotton.blue
+  - pull_secret.yaml
+  - bmc_secret.yaml
