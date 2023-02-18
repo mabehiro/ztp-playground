@@ -48,7 +48,7 @@ spec:
         bmcAddress: "redfish-virtualmedia://fakefish-192-168-1-62-fakefish.apps.hub.cotton.blue/redfish/v1/Systems/1"
         bmcCredentialsName:
           name: "sno-bmc-secret"
-        bootMACAddress: "70:10:6f:4f:ee:c6"
+        bootMACAddress: "70:10:6f:4f:ee:c4"
         bootMode: "UEFI"
         rootDeviceHints:
           deviceName: "/dev/sda"
