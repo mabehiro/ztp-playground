@@ -36,6 +36,7 @@ spec:
       - 172.30.0.0/16
     additionalNTPSources:
       - clock.redhat.com
+    ignitionConfigOverride: '{"ignition":{"version":"3.2.0"},"passwd":{"users":[{"name":"core","passwordHash":"$6$AMb00Izb98UzzDII$nTsI8Q3264XOFa.D15WDajrM.4P1LtWLsH2eYYGbnQvl8jswtzfyYsv46WfzSJnAeZ4j1swrBhlYitPQSYlV01"}]}}'
     #additionalNTPSources:
     #  - 1111:2222:3333:4444::2
     # Optionally; This can be used to override the KlusterletAddonConfig that is creted for this cluster:
