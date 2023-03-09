@@ -8,7 +8,7 @@ spec:
     group-du-sno: ""
     du-profile: "v4.10"
   mcp: "master"
-  remediationAction: inform
+  remediationAction: enforce
   sourceFiles:
     - fileName: ClusterVersion.yaml 
       policyName: "platform-upgrade-prep"
