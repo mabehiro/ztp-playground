@@ -9,7 +9,7 @@ generators:
   # - sno1.yaml
 ## adding for upgrade
 #  - du-upgrade.yaml
-  - du-upgrade-2.yaml
+#  - du-upgrade-2.yaml
 
 
 resources:
