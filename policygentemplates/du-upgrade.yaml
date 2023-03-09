@@ -13,7 +13,7 @@ spec:
     - fileName: ClusterVersion.yaml 
       policyName: "platform-upgrade-prep"
       metadata:
-        name: version
+        name: 4.11.5
         annotations:
           ran.openshift.io/ztp-deploy-wave: "1"
       spec:
@@ -22,7 +22,7 @@ spec:
     - fileName: ClusterVersion.yaml 
       policyName: "platform-upgrade"
       metadata:
-        name: version
+        name: 4.11.5
       spec:
         channel: "stable-4.11"
         upstream: https://api.openshift.com/api/upgrades_info/v1/graph
