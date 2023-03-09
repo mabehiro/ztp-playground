@@ -8,8 +8,8 @@ generators:
 # # These are examples that should be replicated for every individual site:
   - sno1.yaml
 ## adding for upgrade
-  - du-upgrade.yaml
-#  - du-upgrade-2.yaml
+#  - du-upgrade.yaml
+  - du-upgrade-2.yaml
 
 
 resources:
