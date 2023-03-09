@@ -6,7 +6,7 @@ metadata:
 spec:
   bindingRules:
     upgrade: "yes"
-    group-du-sno: ""
+    # group-du-sno: ""
   mcp: "master"
   remediationAction: inform
   sourceFiles:
