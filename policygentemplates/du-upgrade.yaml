@@ -27,8 +27,8 @@ spec:
         channel: "stable-4.11"
         upstream: https://api.openshift.com/api/upgrades_info/v1/graph
         desiredUpdate:
-          version: 4.11.29
+          version: 4.11.5
       status:
         history:
-          - version: 4.11.29
+          - version: 4.11.5
             state: "Completed"
