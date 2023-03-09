@@ -5,8 +5,8 @@ metadata:
   namespace: "ztp-group"
 spec:
   bindingRules:
-    upgrade: "yes"
-    # group-du-sno: ""
+    group-du-sno: ""
+    du-profile: "v4.10"
   mcp: "master"
   remediationAction: inform
   sourceFiles:
