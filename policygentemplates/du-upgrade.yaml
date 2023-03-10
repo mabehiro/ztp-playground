@@ -32,7 +32,7 @@ spec:
         upstream: https://api.openshift.com/api/upgrades_info/v1/graph
         desiredUpdate:
           version: 4.11.5
-      status:
-        history:
-          - version: 4.11.5
-            state: "Completed"
+      # status:
+      #   history:
+      #     - version: 4.11.5
+      #       state: "Completed"
