@@ -271,5 +271,5 @@ spec:
 
                 EOF
         name: monitor-cluster-upgrade
-        image: quay.alflab.att.com:8443/library/ose-cli
+        image: ose-cli
       restartPolicy: Never

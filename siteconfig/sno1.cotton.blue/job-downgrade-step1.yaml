@@ -114,5 +114,5 @@ spec:
 
                 EOF
         name: downgrade-step1
-        image: quay.alflab.att.com:8443/library/ose-cli
+        image: ose-cli
       restartPolicy: Never
