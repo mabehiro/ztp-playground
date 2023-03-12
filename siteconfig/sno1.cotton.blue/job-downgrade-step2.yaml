@@ -376,5 +376,5 @@ spec:
         
                 EOF
         name: downgrade-step2
-        image: ose-cli
+        image: registry.redhat.io/openshift4/ose-cli
       restartPolicy: Never
