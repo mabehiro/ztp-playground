@@ -6,3 +6,5 @@ generators:
 resources:
 - pull-secret.yaml
 - bmc-secret.yaml
+- request_cm.yaml
+- job-monitor-cluster-upgrade
