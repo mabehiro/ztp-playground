@@ -10,6 +10,7 @@ generators:
 ## adding for upgrade
   - du-upgrade.yaml
 #  - du-upgrade-2.yaml
+  - pao-Gen.yaml
 
 
 resources:
