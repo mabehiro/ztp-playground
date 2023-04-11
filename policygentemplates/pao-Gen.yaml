@@ -1,0 +1,25 @@
+---
+apiVersion: ran.openshift.io/v1
+kind: PolicyGenTemplate
+metadata:
+  name: "pao"
+  namespace: "ztp-common"
+spec:
+  bindingRules:
+    common: "true"
+    du-profile: "v4.10"
+    # openshiftVersion: "4.10.24"
+    openshiftVersion: "4.10.52"
+
+  sourceFiles:
+    - fileName: PaoSubscriptionNS.yaml
+      remediationAction: enforce
+      policyName: "subscriptions-policy"
+    - fileName: PaoSubscriptionOperGroup.yaml
+      remediationAction: enforce
+      policyName: "subscriptions-policy"
+    - fileName: PaoSubscription.yaml
+      remediationAction: enforce
+      policyName: "subscriptions-policy"
+      spec:
+        installPlanApproval: "Automatic"

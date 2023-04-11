@@ -1,0 +1,47 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: ztprole
+rules:
+- apiGroups:
+  - agent-install.openshift.io
+  - extensions.hive.openshift.io
+  - hive.openshift.io
+  - metal3.io
+  - cluster.open-cluster-management.io
+  resources:
+  - infraenvs
+  - agentclusterinstalls
+  - clusterdeployments
+  - baremetalhosts
+  - managedclusters
+  verbs:
+  - get
+  - list
+  - watch
+  - delete
+# Allow our ZTP user to create namespace
+# This is needed in order to import the cluster
+- apiGroups:
+  - ""
+  - apps
+  resources:
+  - namespaces
+  - secrets
+  - serviceaccount
+  #- managedclusters
+  # - managedclustervalidators
+  #- managedclustersets/join
+  #- klusterletaddonconfigs
+  verbs: 
+  - "*"
+# webhook for field in ManagedCluster
+- apiGroups:
+  - admission.cluster.open-cluster-management.io
+  - admission.work.open-cluster-management.io
+  - cluster.open-cluster-management.io
+  - agent.open-cluster-management.io
+  resources:
+  - "*"
+  verbs:
+  - "*"

@@ -1,0 +1,86 @@
+# example-node1-bmh-secret & assisted-deployment-pull-secret need to be created under same namespace example-sno
+---
+apiVersion: ran.openshift.io/v1
+kind: SiteConfig
+metadata:
+  name: "sno2"
+  namespace: "sno2"
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  baseDomain: "cotton.blue"
+  pullSecretRef:
+    name: "assisted-deployment-pull-secret"
+  clusterImageSetNameRef: "img4.10.24-x86-64-appsub"
+  sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaqy7YhU9yx28InBRttTWDrsAMqn1txv4Z7ObxrK5ywlILf8LZdWMf8AehwMcxYrkwfC5G48dej6lKXkopQwmu7HCvTtVeU8gn07J6kSl3riAGsbX1wbuCiCjxIXUtHDZUCqc/ZUF/b6efGW0xcmc3fg3xgSWz3YYsH4zWxv211ISfavOjHTHQuVr7ibzEGJrz5S4xJJAY8v9XaYkxbUcaMm2IUFQG7S3RRMywMCSvyhUlPM6/btIVKXfiPy3+nnXhtll2zM3OIVSLOwGQDYhwRxP9TX3vyxidekmxk2gor1aL8S364nNipZITXx5hMHRWrtAX+bgb3FHDdRn9BEYOPLvPVNPKfFZiNULp9ar9QrV1wcfWYGuJ9QSkwfDuRkWVD3KgoZpLEsujP6eAGacyh8jhcv/M5SY5L/sPiX8fklBNWLSuPpMhZAAM1LeKz8iV/GK3jDdVA7nhG7MTRAB0RHnRljDkGcfiEbB+9VmAf+NrfmorPYDL/24o8n1R7tk= mabe@utility.mabe.com"
+  clusters:
+  - clusterName: "sno2"
+    networkType: "OVNKubernetes"
+    clusterLabels:
+      # These example cluster labels correspond to the bindingRules in the PolicyGenTemplate examples
+      du-profile: "v4.10"
+      # These example cluster labels correspond to the bindingRules in the PolicyGenTemplate examples in ../policygentemplates:
+      # ../policygentemplates/common-ranGen.yaml will apply to all clusters with 'common: true'
+      common: true
+      # ../policygentemplates/group-du-sno-ranGen.yaml will apply to all clusters with 'group-du-sno: ""'
+      group-du-sno: ""
+      # ../policygentemplates/example-sno-site.yaml will apply to all clusters with 'sites: "example-sno"'
+      # Normally this should match or contain the cluster name so it only applies to a single cluster
+      sites : "sno2"
+    clusterNetwork:
+      - cidr: 10.128.0.0/14
+        hostPrefix: 23
+    machineNetwork:
+      - cidr: 192.168.1.0/24
+    serviceNetwork:
+      - 172.30.0.0/16
+    additionalNTPSources:
+      - clock.redhat.com
+    #additionalNTPSources:
+    #  - 1111:2222:3333:4444::2
+    # Optionally; This can be used to override the KlusterletAddonConfig that is creted for this cluster:
+    crTemplates:
+      KlusterletAddonConfig: "KlusterletAddonConfigOverride.yaml"
+    nodes:
+      - hostName: "sno2.cotton.blue"
+        role: "master"
+        bmcAddress: "redfish-virtualmedia+http://192.168.1.102:8000/redfish/v1/Systems/b25da76f-58c0-449e-ba53-79d6ed330287"
+        bmcCredentialsName:
+          name: "sno-bmc-secret"
+        bootMACAddress: "52:54:00:67:bb:ee"
+        bootMode: "UEFI"
+        rootDeviceHints:
+          deviceName: "/dev/vda"
+        nodeNetwork:
+          interfaces:
+            - name: "ens1s0"
+              macAddress: "52:54:00:67:bb:ee"
+          config:
+            interfaces:
+              - name: ens1s0
+                type: ethernet
+                state: up
+                ipv4:
+                  enabled: true
+                  dhcp: false
+                  address:
+                  - ip: 192.168.1.180
+                    prefix-length: 24
+            dns-resolver:
+               config:
+                 search:
+                 - cotton.blue
+                 server:
+                 - 192.168.1.1
+            routes:
+              config:
+              - destination: 0.0.0.0/0
+                next-hop-interface: ens1s0
+                next-hop-address: 192.168.1.1
+                table-id: 254
+        # diskPartition:
+        # - device: /dev/vdb
+        #   pratitions:
+        #   - mount_point: /var/recovery
+        #     size: 51200
+        #     start: 800000        
