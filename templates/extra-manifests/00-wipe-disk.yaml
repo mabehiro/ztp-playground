@@ -1,0 +1,27 @@
+apiVersion: machineconfiguration.openshift.io/v1
+kind: MachineConfig
+metadata:
+  name: wipe-storage-secondary-master
+  labels:
+    machineconfiguration.openshift.io/role: master
+spec:
+  config:
+    ignition:
+      version: 3.2.0
+    # passwd:
+    #   users:
+    #     - name: core
+    #       passwordHash: '$6$AMb00Izb98UzzDII$nTsI8Q3264XOFa.D15WDajrM.4P1LtWLsH2eYYGbnQvl8jswtzfyYsv46WfzSJnAeZ4j1swrBhlYitPQSYlV01'
+    systemd:
+      units:
+        - name: wipe-secondary.service
+          enabled: true
+          contents: |
+                  [Unit]
+                  Description=wipe secondary disks once at Install time
+                  ConditionFirstBoot=yes
+                  [Service]
+                  Type=oneshot
+                  ExecStart=/usr/bin/bash -c "sgdisk -Z /dev/sdb"
+                  [Install]
+                  WantedBy=multi-user.target

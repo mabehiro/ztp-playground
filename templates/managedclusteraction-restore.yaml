@@ -1,0 +1,27 @@
+apiVersion: action.open-cluster-management.io/v1beta1
+kind: ManagedClusterAction
+metadata:
+  name: restore-mca
+
+spec:
+  actionType: Create
+  kube:
+    resource: restores.velero.io
+    name: restore
+    template:
+        apiVersion: velero.io/v1
+        kind: Restore
+        metadata:
+          name: restore
+          namespace: openshift-adp
+        spec:
+          backupName: backup
+          excludedResources:
+          - nodes
+          - events
+          - events.events.k8s.io
+          - backups.velero.io
+          - restores.velero.io
+          - resticrepositories.velero.io
+          includedNamespaces:
+          - workload

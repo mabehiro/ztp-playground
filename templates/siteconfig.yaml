@@ -1,0 +1,89 @@
+# example-node1-bmh-secret & assisted-deployment-pull-secret need to be created under same namespace example-sno
+---
+apiVersion: ran.openshift.io/v1
+kind: SiteConfig
+metadata:
+  name: "cluster3"
+  namespace: "cluster3"
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  baseDomain: "lab.example.com"
+  pullSecretRef:
+    name: "assisted-deployment-pull-secret"
+  clusterImageSetNameRef: "openshift-v4.10.24"
+  sshPublicKey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIC6J7nhSgR/mYTBB+QH/6gShkvKkTWhWDhNGVi1PhVkF ztphub"
+  clusters:
+  - clusterName: "cluster3"
+    extraManifestPath: "extraManifests/"
+    networkType: "OVNKubernetes"
+    clusterLabels:
+      # These example cluster labels correspond to the bindingRules in the PolicyGenTemplate examples
+      du-profile: "v4.10"
+      # These example cluster labels correspond to the bindingRules in the PolicyGenTemplate examples in ../policygentemplates:
+      # ../policygentemplates/common-ranGen.yaml will apply to all clusters with 'common: true'
+      common: true
+      # ../policygentemplates/group-du-sno-ranGen.yaml will apply to all clusters with 'group-du-sno: ""'
+      group-du-sno: ""
+      # ../policygentemplates/example-sno-site.yaml will apply to all clusters with 'sites: "example-sno"'
+      # Normally this should match or contain the cluster name so it only applies to a single cluster
+      sites : "cluster3"
+    clusterNetwork:
+      - cidr: 10.128.0.0/14
+        hostPrefix: 23
+    machineNetwork:
+      - cidr: 172.25.181.56/29
+    serviceNetwork:
+      - 172.30.0.0/16
+    #additionalNTPSources:
+    #  - clock.redhat.com
+    #additionalNTPSources:
+    #  - 1111:2222:3333:4444::2
+    # Optionally; This can be used to override the KlusterletAddonConfig that is creted for this cluster:
+    #crTemplates:
+    #  KlusterletAddonConfig: "KlusterletAddonConfigOverride.yaml"
+    nodes:
+      - hostName: "cluster3-node01"
+        role: "master"
+        bmcAddress: "idrac-virtualmedia+https://172.25.181.66/redfish/v1/Systems/System.Embedded.1"
+        bmcCredentialsName:
+          name: "bmc-secret"
+        bootMACAddress: "d0:8e:79:f3:68:4c"
+        bootMode: "UEFI"
+        rootDeviceHints:
+          deviceName: "/dev/sda"
+        nodeNetwork:
+          interfaces:
+            - name: "eno8303"
+              macAddress: "d0:8e:79:f3:68:4c"
+            - name: "eno12409"
+              macAddress: "b4:96:91:eC:1D:99"
+          config:
+            interfaces:
+              - name: eno8303
+                type: ethernet
+                state: up
+                ipv4:
+                  enabled: true
+                  dhcp: false
+                  address:
+                  - ip: 172.25.181.58
+                    prefix-length: 29
+              - name: eno12409
+                type: ethernet
+                state: up
+                ipv4:
+                  enabled: true
+                  dhcp: false
+            dns-resolver:
+               config:
+                 search:
+                 - lab.example.com
+                 server:
+                 - 192.168.50.92
+            routes:
+              config:
+              - destination: 0.0.0.0/0
+                next-hop-interface: eno8303
+                next-hop-address: 172.25.181.57
+                table-id: 254
