@@ -1,19 +1,8 @@
 generators:
-# # This is common to all RAN deployments
-#  - common-ranGen.yaml
-# # This group policy is for all single-node deployments:
-  - group-du-sno-ranGen.yaml
-# # This group validator policy is for all single-node deployments:
-#  - group-du-sno-validator-ranGen.yaml
-# # These are examples that should be replicated for every individual site:
-  - sno1.yaml
-## adding for upgrade
-  - du-upgrade.yaml
-#  - du-upgrade-2.yaml
-  - pao-Gen.yaml
-
-
+- group-du-sno-ranGen.yaml
+- sno1.yaml
+- du-upgrade.yaml
+- pao-Gen.yaml
+- cluster4.yaml
 resources:
-  - ns.yaml
-#  - oadp-policy.yaml
-#  - source-crs  # No need to add, it will pick up automatically
+- ns.yaml

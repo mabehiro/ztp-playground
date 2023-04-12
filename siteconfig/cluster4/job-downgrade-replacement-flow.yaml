@@ -1,0 +1,413 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: job-downgrade-replacement-flow
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  template:
+    spec:
+      containers:
+      - command:
+          - /bin/bash
+          - "-c"
+          - |
+                /bin/bash <<'EOF'
+                # Script used for backup/provisioning/restore on downgrade flow or node replacement flow.
+                # Author: Federico 'tele' Rossi <ferossi@redhat.com>
+
+                function logc() {
+                    txt=$1
+                    echo -e "[`date '+%m-%d-%Y %H:%M:%S'`] $txt" 
+                }
+         
+                function create_managed_view_backup() {
+                   cr=$1
+                   echo -e "apiVersion: view.open-cluster-management.io/v1beta1\nkind: ManagedClusterView\nmetadata:\n   name: backup-${cr}-view\n   namespace: ${cr}\nspec:\n   scope:\n      apiGroup: velero.io\n      kind: Backup\n      name: backup-${NEWNAME}\n      namespace: openshift-adp\n      resource: backups.velero.io" | oc apply -f -
+                }
+
+                function create_managed_action_backup() {
+                   cr=$1
+                   echo -e "apiVersion: action.open-cluster-management.io/v1beta1\nkind: ManagedClusterAction\nmetadata:\n   name: backup-${cr}-workload\n   namespace: ${cr}\nspec:\n  actionType: Create\n  kube:\n    resources: backups.velero.io\n    name: backup-${NEWNAME}\n    template:\n        apiVersion: velero.io/v1\n        kind: Backup\n        metadata:\n          labels:\n             velero.io/storage-location: example-dpa-1\n          name: backup-${NEWNAME}\n          namespace: openshift-adp\n        spec:\n          defaultVolumestoRestic: false\n          hooks: {}\n          includedNamespaces:\n          - workload\n          metadata: {}\n          storageLocation: example-dpa-1" | oc apply -f -
+                }
+
+                function create_managed_action_restore() {
+                   cr=$1
+                   echo -e "apiVersion: action.open-cluster-management.io/v1beta1\nkind: ManagedClusterAction\nmetadata:\n   name: restore-${cr}-workload\n   namespace: ${cr}\nspec:\n   actionType: Create\n   kube:\n      resource: restores.velero.io\n      name: restore-${NEWNAME}\n      template:\n        apiVersion: velero.io/v1\n        kind: Restore\n        metadata:\n           name: restore-${NEWNAME}\n           namespace: openshift-adp\n        spec:\n           backupName: backup-${NEWNAME}\n           excludedResources:\n           - nodes\n           - events\n           - events.events.k8s.io\n           - backups.velero.io\n           - restores.velero.io\n           - resticrepositories.velero.io\n           includedNamespaces:\n           - workload" | oc apply -f -
+                }
+ 
+                function create_managed_view_restore() {
+                   cr=$1
+                   echo -e "apiVersion: view.open-cluster-management.io/v1beta1\nkind: ManagedClusterView\nmetadata:\n   name: restore-${cr}-view\n   namespace: ${cr}\nspec:\n   scope:\n      apiGroup: velero.io\n      kind: Restore\n      name: restore-${NEWNAME}\n      namespace: openshift-adp\n      resource: restores.velero.io" | oc apply -f -
+                }
+
+                logc "START Backup"
+                logc "============================="
+                CLUSTER_BACKUP_START_TIME=`date +%s`
+   
+                NS=`oc get sa -o jsonpath='{.items[0]..metadata.namespace}'`
+                PRE=`date +%Y-%m-%d-%H-%M`
+                NEWNAME=$NS-$PRE
+        
+                logc "Create ManagedClusterAction Backup for $NS"
+                create_managed_action_backup $NS
+                logc "Create ManagedClusterView for Backup"
+                create_managed_view_backup $NS                
+                logc "Monitor backup status"
+
+                ct=0
+                BKP_CHECK=0
+                while [[ $ct -le 20 ]]; do
+                   BKP_STATUS=`oc get managedclusterview backup-${NS}-view -n ${NS} -o jsonpath='{.status.result.status.phase}'`
+
+                   if [[ "$BKP_STATUS" == "Failed" ]]; then
+                      logc "Backup failed:"
+                      oc get managedclusterview backup-${NS}-view -n ${NS} -o jsonpath='{.status.result.status}'
+                      echo
+                      BKP_CHECK=1
+                      break
+                   elif [[ "$BKP_STATUS" == "Completed" ]]; then
+                      logc "Backup successfully completed: "
+                      oc get managedclusterview backup-${NS}-view -n ${NS} -o jsonpath='{.status.result.status}'
+                      echo
+                      break
+                   elif [[ "$BKP_STATUS" == "InProgress" ]]; then
+                      logc "Backup is in progress..."
+                   else
+                      logc "Backup status unknown: "
+                      oc get managedclusterview backup-${NS}-view -n ${NS} -o jsonpath='{.status.result.status}'   
+                      echo
+                   fi
+ 
+                   sleep 10
+                   ct=$(($ct+1))
+                done
+                
+                CLUSTER_BACKUP_END_TIME=`date +%s`
+
+                if [[ $BKP_CHECK -eq 1 ]]; then
+                   logc "Backup failed, interrupt process"
+                   logc "Notify failure" 
+
+                   CLUSTER_TOTAL_TIME=`echo $(( $CLUSTER_BACKUP_START_TIME - $CLUSTER_BACKUP_END_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}'`
+                   RESP_START_TIME=`date -d @$CLUSTER_BACKUP_START_TIME '+%m-%d-%Y %H:%M:%S'`
+                   RESP_END_TIME=`date -d @CLUSTER_BACKUP_END_TIME '+%m-%d-%Y %H:%M:%S'`
+
+                   curl -v -X POST -H 'Content-Type: application/json' -d "{\"type\": \"DOWNGRADE_CLUSTER_REPLY\", \"cluster_name\": \"$NS\", \"start_time\": \"$RESP_START_TIME\", \"end_time\": \"$RESP_END_TIME\", \"duration\": \"$CLUSTER_TOTAL_TIME\", \"state\": \"FAILED\", \"reason\": \"\"}" http://ztpintegration-amq.apps.ztphub.fedge.lab.com/ztp
+                   exit 1                  
+                fi
+
+
+                # delete managedcluster
+                # delete clusterdeployment
+                # delete infraenv
+                # delete bmh
+                logc "Trigger cluster reprovisioning by deleting ClusterDeployment, InfraEnv and BMH"
+
+                logc "Current ManagedCluster: "
+                oc get managedcluster
+                logc "Delete ManagedCluster.."
+                oc delete managedcluster $NS
+
+                logc "Current ClusterDeployment: "
+                oc get clusterdeployment -n $NS
+                logc "Delete ClusterDeployment.."
+                oc get clusterdeployment -n $NS | grep -v NAME | awk '{print $1}' | xargs oc delete clusterdeployment -n $NS
+
+                logc "Current InfraEnv: "
+                oc get infraenv -n $NS
+                logc "Delete InfraEnv.."
+                oc get infraenv -n $NS | grep -v NAME | awk '{print $1}' | xargs oc delete infraenv -n $NS
+
+                logc "Current BMH: "
+                oc get bmh -n $NS
+                logc "Delete BMH: "
+                oc get bmh -n $NS | grep -v NAME | awk '{print $1}' | xargs oc delete bmh -n $NS
+             
+                logc "Current AgentClusterInstall: "
+                oc get agentclusterinstall -n $NS
+                logc "Delete AgentClusterInstall: "
+                oc get agentclusterinstall -n $NS | grep -v NAME | awk '{print $1}' | xargs oc delete agentclusterinstall -n $NS
+                
+                # monitor new cluster install
+                ct=0
+                INSTALL_STATUS=0
+    
+                CLUSTER_START_TIME=`date +%s`
+                logc "START Cluster monitor install"
+                logc "============================="
+    
+                BM_CHECK=0
+                logc "Check BareMetalNodes readiness"
+                # Wait for BaremetalNodes to be ready and registered
+                while [[ $ct -le 10 ]]; do
+                  res=`oc get bmh | sed 1d | awk '{print $1}' |  xargs oc get bmh -o jsonpath='{.status.operationalStatus}' 2>/dev/null`
+                  echo -e "RES: $res"
+                  if [ "$res" == "error" ]; then
+                    logc "Error detected on BMH:"
+                    oc get bmh | sed 1d | awk '{print $1}' | xargs oc get bmh -o jsonpath='{.status.errorMessage}'
+                    echo
+                  else
+                    logc "No errors detected"
+                    oc get bmh
+                    BM_CHECK=1
+                  fi
+    
+                  if [[ $BM_CHECK -eq 1 ]]; then
+                    break;
+                  fi
+                 
+                  # wait 2 minutes
+                  logc "Waiting to check baremetal nodes status.."
+                  sleep 60
+                  ct=$(($ct+1))
+                done
+
+                if [[ $BM_CHECK -eq 0 ]]; then
+                  logc "Baremetal nodes failure"
+                  exit
+                fi
+                
+                logc "Baremetal nodes ready for installation!"
+                
+
+
+                logc "Check agentclusterinstall readiness"
+                ct=0
+                while [[ $ct -le 10 ]]; do
+                  AGENT_NAME=`oc get agentclusterinstall | tail -1 | awk '{print $1}'`
+                  if [ -z "$AGENT_NAME" ]; then 
+                      logc "Agent name IS NULL"
+                  else
+                      echo "Agent name: $AGENT_NAME"
+                      break;
+                  fi
+                  
+                  sleep 10
+                  ct=$(($ct+1))
+                done
+                logc "Start monitoring installation status"
+    
+                # reset counter
+                ct=0
+                # Give 1 hour for install time, timeout if cluster installation is not completed in 1 hour
+                while [[ $ct -le 80 ]]; do
+                  
+                  # get install state
+                  INSTALL_STATUS=`oc get agentclusterinstall $AGENT_NAME -o jsonpath='{.status.debugInfo.state}'`
+                  # get install state details
+                  INSTALL_STATUS_MSG=`oc get agentclusterinstall $AGENT_NAME -o jsonpath='{.status.debugInfo.stateInfo}'`
+    
+                  case $INSTALL_STATUS in
+                    
+                    insufficient)
+                       logc "Cluster has not sufficient requirements to begin the installation"
+                       logc "NOTE: It usually means the host validation is not completed." 
+                       logc "      Agent still has to register to AI or it's registered and validation is failing."
+                       logc "      Give it some time and then check manually agentclusterinstall for any error"
+                       ;;
+    
+                    preparing-for-installation)
+                       logc "Preparing for cluster installation"
+                       ;;
+    
+                    installing)
+                       logc "Installation in progress.."
+                       logc "Status: $INSTALL_STATUS_MSG"
+                       ;; 
+    
+                    installing-pending-user-action)
+                       logc "Installation is pending user action, error occured and stopped the install"
+                       logc "Output: $INSTALL_STATUS_MSG"
+                       ;;
+    
+                    finalizing)
+                       logc "`oc get agentclusterinstall $AGENT_NAME -o jsonpath='{.status.conditions[3].message}'`"
+                       ;;
+    
+                    installed)
+                       logc "Cluster successfully installed"
+                       INSTALL_STATUS=1
+                       break;
+                       ;;
+    
+                    adding-hosts)
+                       logc "Adding-host state"
+                       INSTALL_STATUS=1
+                       break;
+                       ;;
+    
+                    *)
+                       logc "Status unknown"
+                       logc "Output: `oc get agentclusterinstall $AGENT_NAME -o jsonpath='{.status.debugInfo.stateInfo}'`"
+                       ;;
+                  esac
+    
+                  if [[ $INSTALL_STATUS -eq 1 ]]; then
+                    break;
+                  fi
+    
+                  # wait 3 minutes before checking again cluster status
+                  logc "Waiting to check cluster status.."
+                  sleep 90
+                  ct=$(($ct+1))
+                done
+    
+                logc "============================="
+    
+                CLUSTER_END_TIME=`date +%s`
+                logc "CLUSTER_START_TIME: $CLUSTER_START_TIME"
+                CLUSTER_TOTAL_TIME=`echo $(( $CLUSTER_END_TIME - $CLUSTER_START_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}'`
+                logc "END Installation time: $CLUSTER_TOTAL_TIME"
+    
+                if [[ $INSTALL_STATUS -eq 1 ]]; then
+                  logc "Cluster installation completed, get kubeconfig and kubeadmin password for the cluster"
+                  logc "Kubeadmin password: "
+                  NS=`oc get sa -o jsonpath='{.items[0]..metadata.namespace}'`
+                  oc get secret $NS-admin-password -o jsonpath='{.data.password}' | base64 --decode
+                  echo -e "\n"
+                  logc "Kubeconfig: "
+                  oc get secret $NS-admin-kubeconfig -o jsonpath='{.data.kubeconfig}' | base64 --decode
+    
+    
+                  # If your ZTP process includes policy deployment
+                  # Monitor policy deployment        
+                  POLICY_START_TIME=`date +"%s"`
+                  logc "Start policies deployment monitoring"
+                  # reset counter
+                  ct=0
+                  # Give 1 hour for policies deployment time
+                  while [[ $ct -le 40 ]]; do
+                    POLICY_STATUS=`oc get managedcluster $AGENT_NAME -o jsonpath='{.metadata.labels}'`
+                    if (echo $POLICY_STATUS | grep ztp-running > /dev/null ); then
+                       logc "Applying policies.. status: ztp-running"
+                    elif (echo $POLICY_STATUS | grep ztp-done > /dev/null ); then
+                       logc "Policies deployment done! status: ztp-done"
+                      POLICY_END_TIME=`date +"%s"`
+                       break;
+                    fi
+    
+                    # wait 3 minutes before checking again cluster status
+                    logc "Waiting to check policy apply status.."
+                    sleep 90
+                    ct=$(($ct+1))
+                  done
+                  
+                  POLICY_TOTAL_TIME=`echo $(( $POLICY_END_TIME - $POLICY_START_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}'`
+                  
+    
+                  TOTAL_TIME=`echo $(( $POLICY_END_TIME - $CLUSTER_START_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}'`
+    
+  
+                  # cluster installation completed
+                  logc "Cluster $NS deployment is completed"
+                  RESP_START_TIME=`date -d @${CLUSTER_START_TIME} '+%m-%d-%Y %H:%M:%S'`
+                  RESP_END_TIME=`date -d @${POLICY_END_TIME} '+%m-%d-%Y %H:%M:%S'`
+   
+                  # Trigger cluster restore procedure
+                  logc "Restore backup from OADP.."
+                  logc "Create ManagedClusterAction Restore for $NS"
+                  create_managed_action_restore $NS
+                  logc "Create ManagedClusterView for backup restore"
+                  create_managed_view_restore $NS
+
+                  # monitor backup restore
+                  ct=0
+                  REC_CHECK=0
+                  CLUSTER_RESTORE_START_TIME=`date +%s`
+                  while [[ $ct -le 20 ]]; do
+                   REC_STATUS=`oc get managedclusterview restore-${NS}-view -n ${NS} -o jsonpath='{.status.result.status.phase}'`
+
+                   if [[ "$REC_STATUS" == "Failed" ]]; then
+                      logc "Restore backup failed:"
+                      oc get managedclusterview restore-${NS}-view -n ${NS} -o jsonpath='{.status.result.status}'
+                      echo
+                      RES_CHECK=1
+                      break
+                   elif [[ "$REC_STATUS" == "Completed" ]]; then
+                      logc "Restore backup successfully completed: "
+                      oc get managedclusterview restore-${NS}-view -n ${NS} -o jsonpath='{.status.result.status}'
+                      echo
+                      break
+                   elif [[ "$REC_STATUS" == "InProgress" ]]; then
+                      logc "Restore backup is in progress..."
+                   else
+                      logc "Restore backup status unknown: "
+                      oc get managedclusterview restore-${NS}-view -n ${NS} -o jsonpath='{.status.result.status}'
+                      echo
+                   fi
+
+                   sleep 10
+                   ct=$(($ct+1))
+                  done
+                  
+                  if [[ $RES_CHECK -eq 1 ]]; then
+                   logc "Backup restore failed, interrupt process"
+                   logc "Notify failure"
+
+                   CLUSTER_TOTAL_TIME=`echo $(( $CLUSTER_RESTORE_START_TIME - $CLUSTER_RESTORE_END_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}'`
+                   RESP_START_TIME=`date -d @$CLUSTER_RESTORE_START_TIME '+%m-%d-%Y %H:%M:%S'`
+                   RESP_END_TIME=`date -d @CLUSTER_RESTORE_END_TIME '+%m-%d-%Y %H:%M:%S'`
+
+                   echo "{\"type\": \"DOWNGRADE_CLUSTER_REPLY\", \"cluster_name\": \"$NS\", \"start_time\": \"$RESP_START_TIME\", \"end_time\": \"$RESP_END_TIME\", \"duration\": \"$CLUSTER_TOTAL_TIME\", \"state\": \"FAILED\", \"reason\": \"\"}"
+
+                   curl -v -X POST -H 'Content-Type: application/json' -d "{\"type\": \"DOWNGRADE_CLUSTER_REPLY\", \"cluster_name\": \"$NS\", \"start_time\": \"$RESP_START_TIME\", \"end_time\": \"$RESP_END_TIME\", \"duration\": \"$CLUSTER_TOTAL_TIME\", \"state\": \"FAILED\", \"reason\": \"\"}" http://ztpintegration-amq.apps.ztphub.fedge.lab.com/ztp
+                   exit 1                
+
+                  fi
+                  
+
+
+                  CLUSTER_RESTORE_END_TIME=`date +%s`
+                  
+                  CLUSTER_BACKUP_TOTAL_TIME=`echo $(( $CLUSTER_BACKUP_END_TIME - $CLUSTER_BACKUP_START_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}' `
+                  CLUSTER_RESTORE_TOTAL_TIME=`echo $(( $CLUSTER_RESTORE_END_TIME - $CLUSTER_RESTORE_START_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}'`
+                  CLUSTER_TOTAL_TIME=`echo $(( $CLUSTER_RESTORE_END_TIME - $CLUSTER_BACKUP_START_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}'`
+
+                  logc "Summary"
+                  logc "======================"
+                  logc "Backup install start time: `date -d @$CLUSTER_BACKUP_START_TIME '+%m-%d-%Y %H:%M:%S'`" 
+                  logc "Backup install end time: `date -d @$CLUSTER_BACKUP_END_TIME '+%m-%d-%Y %H:%M:%S'`" 
+                  logc "Backup duration: $CLUSTER_BACKUP_TOTAL_TIME"     
+                  logc "Cluster install start time: `date -d @$CLUSTER_START_TIME '+%m-%d-%Y %H:%M:%S'`"
+                  logc "Cluster install end time: `date -d @$CLUSTER_END_TIME '+%m-%d-%Y %H:%M:%S'`"
+                  logc "Cluster install total time: $CLUSTER_TOTAL_TIME\n"
+                  logc "Policies deployment start time: `date -d @$POLICY_START_TIME '+%m-%d-%Y %H:%M:%S'`"
+                  logc "Policies deployment end time: `date -d @$POLICY_END_TIME '+%m-%d-%Y %H:%M:%S'`"              
+                  logc "Policies deployment total time: $POLICY_TOTAL_TIME\n"
+                  logc "Restore backup start time: `date -d @$CLUSTER_RESTORE_START_TIME '+%m-%d-%Y %H:%M:%S'`"
+                  logc "Restore backup end time: `date -d @$CLUSTER_RESTORE_START_TIME '+%m-%d-%Y %H:%M:%S'`"
+                  logc "Restore backup total time: $CLUSTER_RESTORE_TOTAL_TIME\n"
+        
+                  logc "Total flow duration: $CLUSTER_TOTAL_TIME\n"
+
+
+                  logc "Notify DOWNGRADE_CLUSTER_REPLY"
+                  echo "{\"type\": \"DOWNGRADE_CLUSTER_REPLY\", \"cluster_name\": \"$NS\", \"start_time\": \"$RESP_START_TIME\", \"end_time\": \"$RESP_END_TIME\", \"duration\": \"$TOTAL_TIME\", \"state\": \"SUCCESS\", \"reason\": \"\"}"
+
+                  # notify cluster downgrad completed
+                  curl -v -X POST -H 'Content-Type: application/json' -d "{\"type\": \"DOWNGRADE_CLUSTER_REPLY\", \"cluster_name\": \"$NS\", \"start_time\": \"$RESP_START_TIME\", \"end_time\": \"$RESP_END_TIME\", \"duration\": \"$TOTAL_TIME\", \"state\": \"SUCCESS\", \"reason\": \"\"}" http://ztpintegration-amq.apps.ztphub.fedge.lab.com/ztp
+
+                  exit 0
+                else
+                  logc "Cluster installation failed"
+                  collect_logs $AGENT_NAME
+
+                  NS=`oc get sa -o=jsonpath='{.items[0]..metadata.namespace}'`
+                  logc "Send notification cluster $NS installation failed"
+
+                  RESP_START_TIME=`date -d @${CLUSTER_START_TIME} '+%m-%d-%Y %H:%M:%S'`
+                  RESP_END_TIME=`date +%s`
+                  DURATION=`echo $(( $CLUSTER_BACKUP_START_TIME - $RESP_END_TIME )) | awk '{printf "%d:%02d:%02d", $1/3600, ($1/60)%60, $1%60}'`  `date -d @$CLUSTER_BACKUP_START_TIME '+%m-%d-%Y %H:%M:%S'`
+
+                  echo "{\"type\": \"DOWNGRADE_CLUSTER_REPLY\", \"cluster_name\": \"$NS\", \"start_time\": \"$RESP_START_TIME\", \"end_time\": \"$RESP_END_TIME\", \"duration\": \"$DURATION\", \"state\": \"FAILED\", \"reason\": \"\"}"
+
+                  curl -v -X POST -H 'Content-Type: application/json' -d "{\"type\": \"DOWNGRADE_CLUSTER_REPLY\", \"cluster_name\": \"$NS\", \"start_time\": \"$RESP_START_TIME\", \"end_time\": \"$RESP_END_TIME\", \"duration\": \"$DURATION\", \"state\": \"FAILED\", \"reason\": \"\"}" http://ztpintegration-amq.apps.ztphub.fedge.lab.com/ztp
+                  exit 1
+                fi
+
+        
+                EOF
+        name: downgrade-replacement-flow
+        image: quay.lab.example.com:8443/openshift4/ose-cli
+      restartPolicy: Never

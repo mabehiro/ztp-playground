@@ -1,0 +1,507 @@
+---
+{
+   "apiVersion": "ran.openshift.io/v1",
+   "kind": "SiteConfig",
+   "metadata": {
+      "annotations": {
+         "argocd.argoproj.io/sync-wave": "2"
+      },
+      "name": "cluster4",
+      "namespace": "cluster4"
+   },
+   "spec": {
+      "baseDomain": "lab.example.com",
+      "clusterImageSetNameRef": "img4.10.52-x86-64-appsub",
+      "clusters": [
+         {
+            "additionalNTPSources": [
+               "clock.redhat.com"
+            ],
+            "apiVIP": "172.25.181.13",
+            "clusterLabels": {
+               "common": true,
+               "du-profile": "v4.10",
+               "group-du-sno": "",
+               "sites": "cluster4"
+            },
+            "clusterName": "cluster4",
+            "clusterNetwork": [
+               {
+                  "cidr": "10.128.0.0/14",
+                  "hostPrefix": 23
+               }
+            ],
+            "ingressVIP": "172.25.181.14",
+            "machineNetwork": [
+               {
+                  "cidr": "172.25.181.0/27"
+               }
+            ],
+            "networkType": "OVNKubernetes",
+            "nodes": [
+               {
+                  "bmcAddress": "redfish-virtualmedia://fakefish-192-168-1-62-fakefish.apps.hub.cotton.blue/redfish/v1/Systems/1",
+                  "bmcCredentialsName": {
+                     "name": "sno-bmc-secret"
+                  },
+                  "bootMACAddress": "b4:45:06:f1:c6:8b",
+                  "bootMode": "UEFI",
+                  "hostName": "atlztp02",
+                  "nodeNetwork": {
+                     "config": {
+                        "dns-resolver": {
+                           "config": {
+                              "search": [
+                                 [
+                                    "lab.example.com"
+                                 ]
+                              ],
+                              "server": [
+                                 [
+                                    "192.168.50.92"
+                                 ]
+                              ]
+                           }
+                        },
+                        "interfaces": [
+                           {
+                              "ipv4": {
+                                 "address": [
+                                    {
+                                       "ip": "172.25.181.8",
+                                       "prefix-length": "27"
+                                    }
+                                 ],
+                                 "dhcp": false,
+                                 "enabled": true
+                              },
+                              "name": "emb1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "emb2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": true
+                              },
+                              "name": "int1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "int2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p3p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p4p1",
+                              "type": "ethernet"
+                           }
+                        ],
+                        "routes": {
+                           "config": [
+                              {
+                                 "destination": "0.0.0.0/0",
+                                 "next-hop-address": [
+                                    "172.25.181.1"
+                                 ],
+                                 "next-hop-interface": [
+                                    "emb1p1"
+                                 ],
+                                 "table-id": "254"
+                              }
+                           ]
+                        }
+                     },
+                     "interfaces": [
+                        {
+                           "macAddress": "b4:45:06:f1:c6:8b",
+                           "name": "emb1p1"
+                        },
+                        {
+                           "macAddress": "D0:8E:79:F3:64:1F",
+                           "name": "emb2p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:EB:FF:10",
+                           "name": "int1p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:EB:FF:11",
+                           "name": "int2p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:DA:C7:F4",
+                           "name": "slot5p1p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:DA:C7:F5",
+                           "name": "slot5p2p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:DA:C7:F6",
+                           "name": "slot5p3p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:DA:C7:F7",
+                           "name": "slot5p4p1"
+                        }
+                     ]
+                  },
+                  "role": "master",
+                  "rootDeviceHints": {
+                     "deviceName": "/dev/sda"
+                  }
+               },
+               {
+                  "bmcAddress": "redfish-virtualmedia://fakefish-192-168-1-62-fakefish.apps.hub.cotton.blue/redfish/v1/Systems/1",
+                  "bmcCredentialsName": {
+                     "name": "sno-bmc-secret"
+                  },
+                  "bootMACAddress": "ec:2a:72:50:f0:58",
+                  "bootMode": "UEFI",
+                  "hostName": "atlztp03",
+                  "nodeNetwork": {
+                     "config": {
+                        "dns-resolver": {
+                           "config": {
+                              "search": [
+                                 [
+                                    "lab.example.com"
+                                 ]
+                              ],
+                              "server": [
+                                 [
+                                    "192.168.50.92"
+                                 ]
+                              ]
+                           }
+                        },
+                        "interfaces": [
+                           {
+                              "ipv4": {
+                                 "address": [
+                                    {
+                                       "ip": "172.25.181.10",
+                                       "prefix-length": "27"
+                                    }
+                                 ],
+                                 "dhcp": false,
+                                 "enabled": true
+                              },
+                              "name": "emb1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "emb2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": true
+                              },
+                              "name": "int1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "int2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p3p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p4p1",
+                              "type": "ethernet"
+                           }
+                        ],
+                        "routes": {
+                           "config": [
+                              {
+                                 "destination": "0.0.0.0/0",
+                                 "next-hop-address": [
+                                    "172.25.181.1"
+                                 ],
+                                 "next-hop-interface": [
+                                    "emb1p1"
+                                 ],
+                                 "table-id": "254"
+                              }
+                           ]
+                        }
+                     },
+                     "interfaces": [
+                        {
+                           "macAddress": "ec:2a:72:50:f0:58",
+                           "name": "emb1p1"
+                        },
+                        {
+                           "macAddress": "D0:8E:79:F6:D9:F3",
+                           "name": "emb2p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:EC:10:9C",
+                           "name": "int1p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:EC:10:9D",
+                           "name": "int2p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:D9:01:08",
+                           "name": "slot5p1p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:D9:01:09",
+                           "name": "slot5p2p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:D9:01:0A",
+                           "name": "slot5p3p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:D9:01:0B",
+                           "name": "slot5p4p1"
+                        }
+                     ]
+                  },
+                  "role": "master",
+                  "rootDeviceHints": {
+                     "deviceName": "/dev/sda"
+                  }
+               },
+               {
+                  "bmcAddress": "redfish-virtualmedia://fakefish-192-168-1-62-fakefish.apps.hub.cotton.blue/redfish/v1/Systems/1",
+                  "bmcCredentialsName": {
+                     "name": "sno-bmc-secret"
+                  },
+                  "bootMACAddress": "b4:45:06:f1:c9:e5",
+                  "bootMode": "UEFI",
+                  "hostName": "atlztp04",
+                  "nodeNetwork": {
+                     "config": {
+                        "dns-resolver": {
+                           "config": {
+                              "search": [
+                                 [
+                                    "lab.example.com"
+                                 ]
+                              ],
+                              "server": [
+                                 [
+                                    "192.168.50.92"
+                                 ]
+                              ]
+                           }
+                        },
+                        "interfaces": [
+                           {
+                              "ipv4": {
+                                 "address": [
+                                    {
+                                       "ip": "172.25.181.20",
+                                       "prefix-length": "27"
+                                    }
+                                 ],
+                                 "dhcp": false,
+                                 "enabled": true
+                              },
+                              "name": "emb1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "emb2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "int1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "int2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p1p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p2p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p3p1",
+                              "type": "ethernet"
+                           },
+                           {
+                              "ipv4": {
+                                 "dhcp": false,
+                                 "enabled": false
+                              },
+                              "name": "slot5p4p1",
+                              "type": "ethernet"
+                           }
+                        ],
+                        "routes": {
+                           "config": [
+                              {
+                                 "destination": "0.0.0.0/0",
+                                 "next-hop-address": [
+                                    "172.25.181.1"
+                                 ],
+                                 "next-hop-interface": [
+                                    "emb1p1"
+                                 ],
+                                 "table-id": "254"
+                              }
+                           ]
+                        }
+                     },
+                     "interfaces": [
+                        {
+                           "macAddress": "b4:45:06:f1:c9:e5",
+                           "name": "emb1p1"
+                        },
+                        {
+                           "macAddress": "b0:7b:25:d4:2c:31",
+                           "name": "emb2p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:BE:B1:C8",
+                           "name": "int1p1"
+                        },
+                        {
+                           "macAddress": "B4:96:91:BE:B1:C9",
+                           "name": "int2p1"
+                        },
+                        {
+                           "macAddress": "04:3F:72:FE:DC:E8",
+                           "name": "slot5p1p1"
+                        },
+                        {
+                           "macAddress": "04:3F:72:FE:DC:E9",
+                           "name": "slot5p2p1"
+                        },
+                        {
+                           "macAddress": "04:3F:72:FE:DC:E0",
+                           "name": "slot5p3p1"
+                        },
+                        {
+                           "macAddress": "04:3F:72:FE:DC:E1",
+                           "name": "slot5p4p1"
+                        }
+                     ]
+                  },
+                  "role": "master",
+                  "rootDeviceHints": {
+                     "deviceName": "/dev/sda"
+                  }
+               }
+            ],
+            "serviceNetwork": [
+               "172.30.0.0/16"
+            ]
+         }
+      ],
+      "pullSecretRef": {
+         "name": "assisted-deployment-pull-secret"
+      },
+      "sshPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaqy7YhU9yx28InBRttTWDrsAMqn1txv4Z7ObxrK5ywlILf8LZdWMf8AehwMcxYrkwfC5G48dej6lKXkopQwmu7HCvTtVeU8gn07J6kSl3riAGsbX1wbuCiCjxIXUtHDZUCqc/ZUF/b6efGW0xcmc3fg3xgSWz3YYsH4zWxv211ISfavOjHTHQuVr7ibzEGJrz5S4xJJAY8v9XaYkxbUcaMm2IUFQG7S3RRMywMCSvyhUlPM6/btIVKXfiPy3+nnXhtll2zM3OIVSLOwGQDYhwRxP9TX3vyxidekmxk2gor1aL8S364nNipZITXx5hMHRWrtAX+bgb3FHDdRn9BEYOPLvPVNPKfFZiNULp9ar9QrV1wcfWYGuJ9QSkwfDuRkWVD3KgoZpLEsujP6eAGacyh8jhcv/M5SY5L/sPiX8fklBNWLSuPpMhZAAM1LeKz8iV/GK3jDdVA7nhG7MTRAB0RHnRljDkGcfiEbB+9VmAf+NrfmorPYDL/24o8n1R7tk= mabe@utility.mabe.com"
+   }
+}
+...
