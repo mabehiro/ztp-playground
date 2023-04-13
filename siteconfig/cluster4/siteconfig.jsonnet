@@ -60,6 +60,10 @@ local inputs = import 'inputs.libsonnet';
           local gw = std.map(function(x) x.routes[0].gw, filtered);
           local primary_int = std.map(function(x) x.int_name, filtered);
 
+          # get BMC address
+          local filtered = std.filter(function(x) x.target == 'ilo', inputs.clusters[0].nodes[i].networks);
+          local bmcaddress = std.map(function(x) x.ip, filtered);
+          local bmcaddress_ip = std.split(bmcaddress[0], "/")[0];
 
           {
             hostName: inputs.clusters[0].nodes[i].hostname,
@@ -90,7 +94,7 @@ local inputs = import 'inputs.libsonnet';
                     ipv4: {
                       enabled: inputs.clusters[0].nodes[i].networks[s].enabled,
                       dhcp: inputs.clusters[0].nodes[i].networks[s].dhcp,
-                      [if std.objectHas(inputs.clusters[0].nodes[i].networks[s], "ip") then 'address' else null]: [ {'ip': std.split(inputs.clusters[0].nodes[i].networks[s].ip, "/")[0],'prefix-length': std.split(inputs.clusters[0].nodes[i].networks[s].ip, "/")[1]}],
+                      [if std.objectHas(inputs.clusters[0].nodes[i].networks[s], "ip") then 'address' else null]: [ {'ip': std.split(inputs.clusters[0].nodes[i].networks[s].ip, "/")[0],'prefix-length': std.parseInt(std.split(inputs.clusters[0].nodes[i].networks[s].ip, "/")[1])}],
                     },
                   },
                  for s in std.range(1, std.length(inputs.clusters[0].nodes[i].networks) - 1)  
@@ -98,10 +102,10 @@ local inputs = import 'inputs.libsonnet';
                 'dns-resolver': {
                   config: {
                     search: [
-                      inputs.clusters[0].dns_search,
+                      inputs.clusters[0].dns_search[0],
                     ],
                     server: [
-                      inputs.clusters[0].dns_servers,
+                      inputs.clusters[0].dns_servers[0],
                     ],
                   },
                 },
@@ -109,9 +113,9 @@ local inputs = import 'inputs.libsonnet';
                   config: [
                     {
                       destination: '0.0.0.0/0',
-                      'next-hop-interface': primary_int,
-                      'next-hop-address': gw,
-                      'table-id': '254',
+                      'next-hop-interface': primary_int[0],
+                      'next-hop-address': gw[0],
+                      'table-id': 254,
                     },
                   ],
                 },
