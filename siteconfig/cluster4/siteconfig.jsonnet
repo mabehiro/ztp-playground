@@ -1,6 +1,4 @@
-local inputs = import 'inputs.libsonnet'; 
-
-std.manifestYamlDoc([{
+function(inputs) {
 
   // Look man, here is comment in jsonnet
   apiVersion: 'ran.openshift.io/v1',
@@ -130,4 +128,4 @@ std.manifestYamlDoc([{
       },
     ],
   },
-},],indent_array_in_object=true)
+}
