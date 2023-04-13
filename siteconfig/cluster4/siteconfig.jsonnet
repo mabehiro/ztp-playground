@@ -130,4 +130,4 @@ std.manifestYamlDoc([{
       },
     ],
   },
-},])
+},],indent_array_in_object=true)
