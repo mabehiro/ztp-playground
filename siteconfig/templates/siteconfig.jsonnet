@@ -61,7 +61,7 @@ local inputs = import 'inputs.libsonnet';
           local primary_int = std.map(function(x) x.int_name, filtered);
 
           # get BMC address
-          local filtered = std.filter(function(x) x.target == 'ilo', inputs.clusters[0].nodes[i].networks);
+          local filtered = std.filter(function(x) x.target == 'idrac', inputs.clusters[0].nodes[i].networks);
           local bmcaddress = std.map(function(x) x.ip, filtered);
           local bmcaddress_ip = std.split(bmcaddress[0], "/")[0];
 
@@ -130,4 +130,14 @@ local inputs = import 'inputs.libsonnet';
       },
     ],
   },
+},{
+
+    apiVersion: 'builtin',
+    kind: 'SecretGenerator',
+    metadata: {
+      name: 'whatever',
+    },
+    username: 'whatever',
+    password: 'whatever',
+
 },]
