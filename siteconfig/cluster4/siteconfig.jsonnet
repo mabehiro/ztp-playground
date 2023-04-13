@@ -1,6 +1,6 @@
 local inputs = import 'inputs.libsonnet'; 
 
-[{
+std.manifestYamlDoc([{
 
   // Look man, here is comment in jsonnet
   apiVersion: 'ran.openshift.io/v1',
@@ -130,4 +130,4 @@ local inputs = import 'inputs.libsonnet';
       },
     ],
   },
-},]
+},])
