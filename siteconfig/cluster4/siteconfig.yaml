@@ -1,16 +1,5 @@
 ---
 {
-   "apiVersion": "builtin",
-   "kind": "SecretGenerator",
-   "metadata": {
-      "name": "whatever"
-      "namespace": "cluster4"
-   },
-   "password": "whatever",
-   "username": "whatever"
-}
----
-{
    "apiVersion": "ran.openshift.io/v1",
    "kind": "SiteConfig",
    "metadata": {
@@ -515,5 +504,14 @@
       "sshPublicKey": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaqy7YhU9yx28InBRttTWDrsAMqn1txv4Z7ObxrK5ywlILf8LZdWMf8AehwMcxYrkwfC5G48dej6lKXkopQwmu7HCvTtVeU8gn07J6kSl3riAGsbX1wbuCiCjxIXUtHDZUCqc/ZUF/b6efGW0xcmc3fg3xgSWz3YYsH4zWxv211ISfavOjHTHQuVr7ibzEGJrz5S4xJJAY8v9XaYkxbUcaMm2IUFQG7S3RRMywMCSvyhUlPM6/btIVKXfiPy3+nnXhtll2zM3OIVSLOwGQDYhwRxP9TX3vyxidekmxk2gor1aL8S364nNipZITXx5hMHRWrtAX+bgb3FHDdRn9BEYOPLvPVNPKfFZiNULp9ar9QrV1wcfWYGuJ9QSkwfDuRkWVD3KgoZpLEsujP6eAGacyh8jhcv/M5SY5L/sPiX8fklBNWLSuPpMhZAAM1LeKz8iV/GK3jDdVA7nhG7MTRAB0RHnRljDkGcfiEbB+9VmAf+NrfmorPYDL/24o8n1R7tk= mabe@utility.mabe.com"
    }
 }
-
-
+---
+{
+   "apiVersion": "builtin",
+   "kind": "SecretGenerator",
+   "metadata": {
+      "name": "whatever"
+      "namespace": "cluster4"
+   },
+   "password": "whatever",
+   "username": "whatever",
+}
