@@ -509,8 +509,8 @@
    "apiVersion": "builtin",
    "kind": "SecretGenerator",
    "metadata": {
-      "name": "whatever"
-      "namespace": "cluster4"
+      "name": "whatever",
+      "namespace": "cluster4",
    },
    "password": "whatever",
    "username": "whatever",
