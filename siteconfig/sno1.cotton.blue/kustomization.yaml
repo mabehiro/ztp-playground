@@ -7,4 +7,4 @@ resources:
 - pull-secret.yaml
 - bmc-secret.yaml
 - request_cm.yaml
-- job-monitor-cluster-upgrade.yaml
+# - job-monitor-cluster-upgrade.yaml
