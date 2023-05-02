@@ -13,8 +13,8 @@ spec:
     du-profile: "v4.10"
   mcp: "master"
   sourceFiles:
-    - fileName: ConsoleOperatorDisable.yaml
-      policyName: "config-policy"
+    # - fileName: ConsoleOperatorDisable.yaml
+    #   policyName: "config-policy"
     # Set ClusterLogForwarder & ClusterLogging as example might be better to create another policyTemp-Group
     # - fileName: ClusterLogForwarder.yaml
     #   policyName: "config-policy"

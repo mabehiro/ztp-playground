@@ -1,8 +1,5 @@
 generators:
 - group-du-sno-ranGen.yaml
 - sno1.yaml
-- du-upgrade.yaml
-- pao-Gen.yaml
-- cluster4.yaml
 resources:
 - ns.yaml
