@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: request-ztp
-data:
-  clustername: cluster4
-  requestid: 9d1b6e4f-f710-4745-a1ab-3b2215c842cd
