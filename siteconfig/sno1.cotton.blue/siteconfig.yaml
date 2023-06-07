@@ -57,6 +57,10 @@ spec:
           interfaces:
             - name: "ens1s0"
               macAddress: "70:10:6f:4f:ee:c4"
+            - name: "ens2f0"
+              macAddress: "b8:59:9f:de:72:20"
+            - name: "ens2f1"
+              macAddress: "b8:59:9f:de:72:21"
           config:
             interfaces:
               - name: ens1s0
@@ -68,6 +72,18 @@ spec:
                   address:
                   - ip: 192.168.1.170
                     prefix-length: 24
+              - name: ens2f0
+                type: ethernet
+                state: down
+                ipv4:
+                  enabled: false
+                  dhcp: false
+              - name: ens2f1
+                type: ethernet
+                state: down
+                ipv4:
+                  enabled: false
+                  dhcp: false
             dns-resolver:
                config:
                  search:
