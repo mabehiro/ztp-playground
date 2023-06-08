@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: request-ztp
-data:
-  clustername: sno1
-  requestid: J-418de24b-c948-4c3e-b3f2-fbc776d82d26
