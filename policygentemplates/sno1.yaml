@@ -8,76 +8,56 @@ spec:
   bindingRules:
     # These policies will correspond to all clusters with this label:
     sites: "sno1"
-    du-profile: ""
   mcp: "master"
   sourceFiles:
     - fileName: SriovNetwork.yaml
       policyName: "config-policy"
       metadata:
-        name: "sriov-nw-du-fh"
+        name: "dpdk_nic_1"
       spec:
-        resourceName: du_fh
-        vlan: 140
-    - fileName: PerformanceProfile.yaml
+        resourceName: dpdk_nic_1
+        ipam: |-
+          {
+            "type": "whereabouts",
+            "range": "192.168.200.0/30"
+          }
+    - fileName: SriovNetwork.yaml
       policyName: "config-policy"
+      metadata:
+        name: "dpdk_nic_2"
       spec:
-        cpu:
-          # These must be tailored for the specific hardware platform
-          isolated: 2-11,14-23,26-35,38-47 
-          reserved: 0,1,12,13,24,25,36,37
-        hugepages:
-          defaultHugepagesSize: 1G
-          pages:
-            - size: 1G
-              count: 32
-    # - fileName: SriovNetwork.yaml
-    #   policyName: "config-policy"
-      # metadata:
-      #   name: "dpdk_nic_1"
-      # spec:
-      #   resourceName: dpdk_nic_1
-      #   ipam: |-
-      #     {
-      #       "type": "whereabouts",
-      #       "range": "192.168.200.0/30"
-      #     }
-    # - fileName: SriovNetwork.yaml
-    #   policyName: "config-policy"
-    #   metadata:
-    #     name: "dpdk_nic_2"
-    #   spec:
-    #     resourceName: dpdk_nic_2
-    #     ipam: |-
-    #       {
-    #         "type": "whereabouts",
-    #         "range": "192.168.201.0/30"
-    #       }
-    # - fileName: SriovNetworkNodePolicy.yaml
-    #   policyName: "config-policy"
-    #   metadata:
-    #     name: "dpdk-nic-1"
-    #   spec:
-    #     deviceType: netdevice
-    #     isRdma: true
-    #     nicSelector:
-    #       rootDevices:
-    #         - "0000:0a:00.0"
-    #     numVfs: 8
-    #     priority: 10
-    #     resourceName: dpdk_nic_1
-    # - fileName: SriovNetworkNodePolicy.yaml
-    #   policyName: "config-policy"
-    #   metadata:
-    #     name: "dpdk-nic-2"
-    #   spec:
-    #     deviceType: netdevice
-    #     isRdma: true
-    #     nicSelector:
-    #       rootDevices:
-    #         - "0000:0a:00.1"
-    #     numVfs: 8
-    #     priority: 10
-    #     resourceName: dpdk_nic_2
+        resourceName: dpdk_nic_2
+        ipam: |-
+          {
+            "type": "whereabouts",
+            "range": "192.168.201.0/30"
+          }
+    - fileName: SriovNetworkNodePolicy.yaml
+      policyName: "config-policy"
+      metadata:
+        name: "dpdk-nic-1"
+      spec:
+        deviceType: netdevice
+        isRdma: true
+        nicSelector:
+          rootDevices:
+            - "0000:0a:00.0"
+        numVfs: 8
+        priority: 10
+        resourceName: dpdk_nic_1
+    - fileName: SriovNetworkNodePolicy.yaml
+      policyName: "config-policy"
+      metadata:
+        name: "dpdk-nic-2"
+      spec:
+        deviceType: netdevice
+        isRdma: true
+        nicSelector:
+          rootDevices:
+            - "0000:0a:00.1"
+        numVfs: 8
+        priority: 10
+        resourceName: dpdk_nic_2
       
     #Adding lvm
     - fileName: lvm/namespace.yaml
