@@ -10,41 +10,41 @@ spec:
     sites: "sno1"
   mcp: "master"
   sourceFiles:
-    - fileName: SriovNetwork.yaml
-      policyName: "config-policy"
-      metadata:
-        name: "dpdknic1"
-      spec:
-        resourceName: dpdknic1
-        ipam: |-
-          {
-            "type": "whereabouts",
-            "range": "192.168.200.0/30"
-          }
-    - fileName: SriovNetwork.yaml
-      policyName: "config-policy"
-      metadata:
-        name: "dpdknic2"
-      spec:
-        resourceName: dpdknic2
-        ipam: |-
-          {
-            "type": "whereabouts",
-            "range": "192.168.201.0/30"
-          }
-    - fileName: SriovNetworkNodePolicy.yaml
-      policyName: "config-policy"
-      metadata:
-        name: "dpdknic1"
-      spec:
-        deviceType: netdevice
-        isRdma: true
-        nicSelector:
-          rootDevices:
-            - "0000:0a:00.0"
-        numVfs: 8
-        priority: 10
-        resourceName: dpdknic1
+    # - fileName: SriovNetwork.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     name: "dpdknic1"
+    #   spec:
+    #     resourceName: dpdknic1
+    #     ipam: |-
+    #       {
+    #         "type": "whereabouts",
+    #         "range": "192.168.200.0/30"
+    #       }
+    # - fileName: SriovNetwork.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     name: "dpdknic2"
+    #   spec:
+    #     resourceName: dpdknic2
+    #     ipam: |-
+    #       {
+    #         "type": "whereabouts",
+    #         "range": "192.168.201.0/30"
+    #       }
+    # - fileName: SriovNetworkNodePolicy.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     name: "dpdknic1"
+    #   spec:
+    #     deviceType: netdevice
+    #     isRdma: true
+    #     nicSelector:
+    #       rootDevices:
+    #         - "0000:0a:00.0"
+    #     numVfs: 8
+    #     priority: 10
+    #     resourceName: dpdknic1
     - fileName: SriovNetworkNodePolicy.yaml
       policyName: "config-policy"
       metadata:
