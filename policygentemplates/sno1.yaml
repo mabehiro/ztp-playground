@@ -23,17 +23,17 @@ spec:
           pages:
             - size: 1G
               count: 32
-    # - fileName: SriovNetwork.yaml
-    #   policyName: "config-policy"
-    #   metadata:
-    #     name: "dpdk_nic_1"
-    #   spec:
-    #     resourceName: dpdk_nic_1
-    #     ipam: |-
-    #       {
-    #         "type": "whereabouts",
-    #         "range": "192.168.200.0/30"
-    #       }
+    - fileName: SriovNetwork.yaml
+      policyName: "config-policy"
+      metadata:
+        name: "dpdk_nic_1"
+      spec:
+        resourceName: dpdk_nic_1
+        ipam: |-
+          {
+            "type": "whereabouts",
+            "range": "192.168.200.0/30"
+          }
     # - fileName: SriovNetwork.yaml
     #   policyName: "config-policy"
     #   metadata:
