@@ -13,9 +13,9 @@ spec:
     - fileName: SriovNetwork.yaml
       policyName: "config-policy"
       metadata:
-        name: "dpdk_nic_1"
+        name: "dpdknic1"
       spec:
-        resourceName: dpdk_nic_1
+        resourceName: dpdknic1
         ipam: |-
           {
             "type": "whereabouts",
@@ -24,9 +24,9 @@ spec:
     - fileName: SriovNetwork.yaml
       policyName: "config-policy"
       metadata:
-        name: "dpdk_nic_2"
+        name: "dpdknic2"
       spec:
-        resourceName: dpdk_nic_2
+        resourceName: dpdknic2
         ipam: |-
           {
             "type": "whereabouts",
@@ -35,7 +35,7 @@ spec:
     - fileName: SriovNetworkNodePolicy.yaml
       policyName: "config-policy"
       metadata:
-        name: "dpdk-nic-1"
+        name: "dpdknic1"
       spec:
         deviceType: netdevice
         isRdma: true
@@ -44,11 +44,11 @@ spec:
             - "0000:0a:00.0"
         numVfs: 8
         priority: 10
-        resourceName: dpdk_nic_1
+        resourceName: dpdknic1
     - fileName: SriovNetworkNodePolicy.yaml
       policyName: "config-policy"
       metadata:
-        name: "dpdk-nic-2"
+        name: "dpdknic2"
       spec:
         deviceType: netdevice
         isRdma: true
@@ -57,7 +57,7 @@ spec:
             - "0000:0a:00.1"
         numVfs: 8
         priority: 10
-        resourceName: dpdk_nic_2
+        resourceName: dpdknic2
       
     #Adding lvm
     - fileName: lvm/namespace.yaml
