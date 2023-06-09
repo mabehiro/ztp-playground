@@ -14,9 +14,9 @@ spec:
       policyName: "config-policy"
       metadata:
         # for sriov only test
-        name: "mlxnics-net"
+        name: "mlxnicsnet"
       spec:
-        resourceName: mlxnics-net
+        resourceName: mlxnicsnet
         ipam: |-
           {
             "type": "whereabouts",
@@ -47,7 +47,7 @@ spec:
     - fileName: SriovNetworkNodePolicy.yaml
       policyName: "config-policy"
       metadata:
-        name: "mlxnics-net"
+        name: "mlxnicsnet"
       spec:
         deviceType: netdevice
         isRdma: false
@@ -57,7 +57,7 @@ spec:
           pfNames: ["ens2f0#0-0","ens2f1#0-0" ]
         numVfs: 8
         priority: 10
-        resourceName: mlxnics-net
+        resourceName: mlxnicsnet
     - fileName: SriovNetworkNodePolicy.yaml
       policyName: "config-policy"
       metadata:
