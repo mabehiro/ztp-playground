@@ -42,7 +42,7 @@ spec:
         nicSelector:
           pfNames: ["ens2f0#0-7"]
           rootDevices:
-            - "0000:0a:00.0"
+            - "0000:0a:00.2"
         numVfs: 8
         priority: 10
         resourceName: dpdknic1
@@ -56,7 +56,7 @@ spec:
         nicSelector:
           pfNames: ["ens2f1#0-7"]
           rootDevices:
-            - "0000:0a:00.1"
+            - "0000:0a:01.2"
         numVfs: 8
         priority: 10
         resourceName: dpdknic2
