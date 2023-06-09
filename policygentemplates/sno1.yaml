@@ -40,7 +40,6 @@ spec:
         deviceType: netdevice
         isRdma: true
         nicSelector:
-          pfNames: ["ens2f0#0-7"]
           rootDevices:
             - "0000:0a:00.2"
         numVfs: 8
@@ -54,7 +53,6 @@ spec:
         deviceType: netdevice
         isRdma: true
         nicSelector:
-          pfNames: ["ens2f1#0-7"]
           rootDevices:
             - "0000:0a:01.2"
         numVfs: 8
