@@ -43,6 +43,7 @@ spec:
           vendor: "15b3"
           deviceID: "1015"
           pfNames: ["ens2f0"]
+          rootDevices: ["0000:0a:00.0"]
         numVfs: 8
         priority: 10
         resourceName: dpdknic1
@@ -57,11 +58,10 @@ spec:
           vendor: "15b3"
           deviceID: "1015"
           pfNames: ["ens2f1"]
-          rootDevices: ["0000:0a:00.0"]
+          rootDevices: ["0000:0a:00.1"]
         numVfs: 8
         priority: 10
         resourceName: dpdknic2
-      
     #Adding lvm
     - fileName: lvm/namespace.yaml
       remediationAction: enforce
