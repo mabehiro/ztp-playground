@@ -13,6 +13,18 @@ spec:
     - fileName: SriovNetwork.yaml
       policyName: "config-policy"
       metadata:
+        # for sriov only test
+        name: "mlxnics-net"
+      spec:
+        resourceName: mlxnics-net
+        ipam: |-
+          {
+            "type": "whereabouts",
+            "range": "192.168.100.0/30"
+          }  
+    - fileName: SriovNetwork.yaml
+      policyName: "config-policy"
+      metadata:
         name: "dpdknic1"
       spec:
         resourceName: dpdknic1
@@ -35,6 +47,20 @@ spec:
     - fileName: SriovNetworkNodePolicy.yaml
       policyName: "config-policy"
       metadata:
+        name: "mlxnics-net"
+      spec:
+        deviceType: netdevice
+        isRdma: false
+        nicSelector:
+          vendor: "15b3"
+          deviceID: "1015"
+          pfNames: ["ens2f0#0-0","ens2f1#0-0" ]
+        numVfs: 8
+        priority: 10
+        resourceName: mlxnics-net
+    - fileName: SriovNetworkNodePolicy.yaml
+      policyName: "config-policy"
+      metadata:
         name: "dpdknic1"
       spec:
         deviceType: netdevice
@@ -42,7 +68,7 @@ spec:
         nicSelector:
           vendor: "15b3"
           deviceID: "1015"
-          pfNames: ["ens2f0"]
+          pfNames: ["ens2f0#4-7"]
           rootDevices: ["0000:0a:00.0"]
         numVfs: 8
         priority: 10
@@ -57,7 +83,7 @@ spec:
         nicSelector:
           vendor: "15b3"
           deviceID: "1015"
-          pfNames: ["ens2f1"]
+          pfNames: ["ens2f1#4-7"]
           rootDevices: ["0000:0a:00.1"]
         numVfs: 8
         priority: 10
