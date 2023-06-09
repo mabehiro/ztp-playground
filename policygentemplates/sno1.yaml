@@ -40,6 +40,8 @@ spec:
         deviceType: netdevice
         isRdma: true
         nicSelector:
+          vendor: "15b3"
+          deviceID: "1015"
           rootDevices:
             - "0000:0a:00.2"
         numVfs: 8
@@ -53,6 +55,8 @@ spec:
         deviceType: netdevice
         isRdma: true
         nicSelector:
+          vendor: "15b3"
+          deviceID: "1015"
           rootDevices:
             - "0000:0a:01.2"
         numVfs: 8
