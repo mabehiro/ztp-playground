@@ -42,7 +42,7 @@ spec:
         nicSelector:
           vendor: "15b3"
           deviceID: "1015"
-          pfNames: ["enp2f0"]
+          pfNames: ["ens2f0"]
         numVfs: 8
         priority: 10
         resourceName: dpdknic1
@@ -56,7 +56,7 @@ spec:
         nicSelector:
           vendor: "15b3"
           deviceID: "1015"
-          pfNames: ["enp2f1"]
+          pfNames: ["ens2f1"]
         numVfs: 8
         priority: 10
         resourceName: dpdknic2
