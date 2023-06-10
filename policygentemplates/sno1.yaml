@@ -55,6 +55,7 @@ spec:
           vendor: "15b3"
           deviceID: "1015"
           pfNames: ["ens2f0#0-3","ens2f1#0-3" ]
+        mtu: 9000
         numVfs: 8
         priority: 10
         resourceName: mlxnicsnet
@@ -70,6 +71,7 @@ spec:
           deviceID: "1015"
           pfNames: ["ens2f0#4-7"]
           rootDevices: ["0000:0a:00.0"]
+        mtu: 9000
         numVfs: 8
         priority: 10
         resourceName: dpdknic1
@@ -85,6 +87,7 @@ spec:
           deviceID: "1015"
           pfNames: ["ens2f1#4-7"]
           rootDevices: ["0000:0a:00.1"]
+        mtu: 9000
         numVfs: 8
         priority: 10
         resourceName: dpdknic2
