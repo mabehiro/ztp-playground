@@ -54,7 +54,7 @@ spec:
         nicSelector:
           vendor: "15b3"
           deviceID: "1015"
-          pfNames: ["ens2f0#0-0","ens2f1#0-0" ]
+          pfNames: ["ens2f0#0-3","ens2f1#0-3" ]
         numVfs: 8
         priority: 10
         resourceName: mlxnicsnet
