@@ -16,7 +16,7 @@ spec:
       spec:
         cpu:
           # These must be tailored for the specific hardware platform
-          isolated: 2-11,14-23,26-35,38-47 
+          isolated: 2-6,14-18,26-30,38-42 
           reserved: 0,1,12,13,24,25,36,37
         hugepages:
           defaultHugepagesSize: 1G
