@@ -3,4 +3,5 @@ generators:
 - group-du-sno-ranGen.yaml
 - sno1.yaml
 resources:
+- policies
 - ns.yaml

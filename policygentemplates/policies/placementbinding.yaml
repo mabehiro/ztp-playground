@@ -1,0 +1,17 @@
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: binding-policy-lab
+placementRef:
+  name: placement-policy-lab
+  kind: PlacementRule
+  apiGroup: apps.open-cluster-management.io
+subjects:
+# - name: policy-mtv-operator
+#   kind: Policy
+#   apiGroup: policy.open-cluster-management.io
+- name: policy-cnv-operator
+  kind: Policy
+  apiGroup: policy.open-cluster-management.io
+   

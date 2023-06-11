@@ -1,0 +1,15 @@
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: placement-policy-lab
+spec:
+  clusterConditions:
+  - status: "True"
+    type: ManagedClusterJoined
+  clusterSelector:
+    matchExpressions:
+      - key: group
+        operator: In
+        values:
+          - "poc"
