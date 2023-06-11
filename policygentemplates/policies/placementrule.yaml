@@ -9,7 +9,7 @@ spec:
     type: ManagedClusterJoined
   clusterSelector:
     matchExpressions:
-      - key: group
+      - key: sites
         operator: In
         values:
-          - "poc"
+          - "sno1"
