@@ -16,6 +16,7 @@ spec:
   clusters:
   - clusterName: "sno1"
     networkType: "OVNKubernetes"
+    extraManifestPath: extra-manifests
     clusterLabels:
       # These example cluster labels correspond to the bindingRules in the PolicyGenTemplate examples
       du-profile: ""

@@ -22,6 +22,6 @@ spec:
                   ConditionFirstBoot=yes
                   [Service]
                   Type=oneshot
-                  ExecStart=/usr/bin/bash -c "sgdisk -Z /dev/nvme1n1"
+                  ExecStart=/usr/bin/bash -c "sgdisk -Z /dev/sdb"
                   [Install]
                   WantedBy=multi-user.target
