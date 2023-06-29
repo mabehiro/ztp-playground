@@ -46,8 +46,8 @@ spec:
     nodes:
       - hostName: "sno1.cotton.blue"
         role: "master"
-        bmcAddress: "ilo4-virtualmedia://192.168.1.62/redfish/v1/Systems/1"
-        #bmcAddress: "redfish-virtualmedia://fakefish-192-168-1-62-fakefish.apps.hub.cotton.blue/redfish/v1/Systems/1"
+        # bmcAddress: "ilo4-virtualmedia://192.168.1.62/redfish/v1/Systems/1"
+        bmcAddress: "redfish-virtualmedia://fakefish-192-168-1-62-fakefish.apps.hub.cotton.blue/redfish/v1/Systems/1"
         # bmcAddress: "ilo4-virtualmedia://fakefish-192-168-1-62-fakefish.apps.hub.cotton.blue/redfish/v1/Systems/1"
         bmcCredentialsName:
           name: "sno-bmc-secret"
