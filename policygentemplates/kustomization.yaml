@@ -1,7 +1,7 @@
 generators:
-# - common-ranGen.yaml
-# - group-du-sno-ranGen.yaml
-# - sno1.yaml
+- common-ranGen.yaml
+- group-du-sno-ranGen.yaml
+- sno1.yaml
 resources:
-# - policies
+- policies
 - ns.yaml
