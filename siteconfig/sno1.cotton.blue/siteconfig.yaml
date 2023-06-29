@@ -50,17 +50,17 @@ spec:
         bmcAddress: "redfish-virtualmedia://fakefish-192-168-1-62-fakefish.apps.hub.cotton.blue/redfish/v1/Systems/1"
         bmcCredentialsName:
           name: "sno-bmc-secret"
-        bootMACAddress: "70:10:6f:4f:ee:c4"
+        bootMACAddress: "98:f2:b3:ed:9e:58"
         bootMode: "UEFI"
         rootDeviceHints:
           deviceName: "/dev/sda"
         nodeNetwork:
           interfaces:
             - name: "ens1s0"
-              macAddress: "70:10:6f:4f:ee:c4"
-            - name: "ens2f0"
+              macAddress: "98:f2:b3:ed:9e:58"
+            - name: "ens1f0"
               macAddress: "b8:59:9f:de:72:20"
-            - name: "ens2f1"
+            - name: "ens1f1"
               macAddress: "b8:59:9f:de:72:21"
           config:
             interfaces:
