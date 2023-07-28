@@ -20,3 +20,40 @@ spec:
       policyName: "subscriptions-policy"
     - fileName: ReduceMonitoringFootprint.yaml
       policyName: "config-policy"
+    # These CRs are in support of installation from a disconnected registry
+    #
+    - fileName: OperatorHub.yaml
+      policyName: "config-policy"
+    - fileName: DefaultCatsrc.yaml
+      policyName: "config-policy"
+      # The Subscriptions all point to redhat-operators. The OperatorHub CR
+      # disables the defaults and this CR replaces redhat-operators with a
+      # CatalogSource pointing to the disconnected registry. Including both of
+      # these in the same policy orders their application to the cluster.
+      metadata:
+        name: redhat-operators
+      spec:
+        displayName: disconnected-redhat-operators
+        image: registry1.cotton.blue:8443/mirror/redhat/redhat-operator-index:v4.13
+    - fileName: DefaultCatsrc.yaml
+      policyName: "config-policy"
+      # The Subscriptions all point to redhat-operators. The OperatorHub CR
+      # disables the defaults and this CR replaces redhat-operators with a
+      # CatalogSource pointing to the disconnected registry. Including both of
+      # these in the same policy orders their application to the cluster.
+      metadata:
+        name: certified-operators
+      spec:
+        displayName: disconnected-certified-operators
+        image: registry1.cotton.blue:8443/mirror/redhat/certified-operator-index:v4.13
+    - fileName: DefaultCatsrc.yaml
+      policyName: "config-policy"
+      # The Subscriptions all point to redhat-operators. The OperatorHub CR
+      # disables the defaults and this CR replaces redhat-operators with a
+      # CatalogSource pointing to the disconnected registry. Including both of
+      # these in the same policy orders their application to the cluster.
+      metadata:
+        name: community-operators
+      spec:
+        displayName: disconnected-community-operators
+        image: registry1.cotton.blue:8443/mirror/redhat/community-operator-index:v4.14
