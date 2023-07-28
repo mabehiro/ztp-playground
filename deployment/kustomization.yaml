@@ -9,3 +9,4 @@ resources:
   - clusters-app.yaml
   - policies-app.yaml
   - rbac.yaml
+  - mirror-registry-configmap.yaml
