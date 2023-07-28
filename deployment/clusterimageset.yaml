@@ -1,0 +1,9 @@
+apiVersion: hive.openshift.io/v1
+kind: ClusterImageSet
+metadata:
+  labels:
+    channel: fast
+    visible: "false"
+  name: 4.13.5
+spec:
+  releaseImage: registry1.cotton.blue:8443/mirror/openshift/release-images:4.13.5-x86_64 
