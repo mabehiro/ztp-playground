@@ -1,1 +1,13 @@
-{"auths":{"registry1.cotton.blue:8443":{"auth":"aW5pdDpjaGFuZ2VtZQ==","email":"mabe@redhat.com"}}}
+{
+    "auths": {
+      "registry1.cotton.blue:8443": {
+        "auth": "aW5pdDpjaGFuZ2VtZQ==",
+        "email": "mabe@redhat.com"
+      },
+      "registry.redhat.io": {
+        "auth": "aW5pdDpjaGFuZ2VtZQ==",
+        "email": "mabe@redhat.com"
+      }
+    }
+  }
+  
