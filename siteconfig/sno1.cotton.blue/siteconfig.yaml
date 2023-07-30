@@ -59,9 +59,9 @@ spec:
           interfaces:
             - name: "ens1s0"
               macAddress: "98:f2:b3:ed:9e:58"
-            - name: "ens1f0"
+            - name: "ens1f0np0"
               macAddress: "b8:59:9f:de:72:20"
-            - name: "ens1f1"
+            - name: "ens1f1np1"
               macAddress: "b8:59:9f:de:72:21"
           config:
             interfaces:
@@ -74,13 +74,13 @@ spec:
                   address:
                   - ip: 192.168.1.170
                     prefix-length: 24
-              - name: ens1f0
+              - name: ens1f0np0
                 type: ethernet
                 state: down
                 ipv4:
                   enabled: false
                   dhcp: false
-              - name: ens1f1
+              - name: ens1f1np1
                 type: ethernet
                 state: down
                 ipv4:
