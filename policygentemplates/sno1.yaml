@@ -70,7 +70,7 @@ spec:
           vendor: "15b3"
           deviceID: "1015"
           pfNames: ["ens1f0#4-7"]
-          rootDevices: ["0000:0a:00.0"]
+          rootDevices: ["0000:06:00.0"]
         mtu: 9000
         numVfs: 8
         priority: 10
@@ -86,7 +86,7 @@ spec:
           vendor: "15b3"
           deviceID: "1015"
           pfNames: ["ens1f1#4-7"]
-          rootDevices: ["0000:0a:00.1"]
+          rootDevices: ["0000:06:00.1"]
         mtu: 9000
         numVfs: 8
         priority: 10
