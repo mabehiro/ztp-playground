@@ -55,7 +55,8 @@ spec:
         bootMACAddress: "98:f2:b3:ed:9e:58"
         bootMode: "UEFI"
         rootDeviceHints:
-          deviceName: "/dev/sda"
+          # deviceName: "/dev/sda"
+          serialNumber: S3L1BTL80000N530A26J
         nodeNetwork:
           interfaces:
             - name: "ens1s0"
