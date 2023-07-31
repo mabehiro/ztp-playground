@@ -9,6 +9,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   baseDomain: "cotton.blue"
+  automatedCleaningMode: enabled
   pullSecretRef:
     name: "assisted-deployment-pull-secret"
   clusterImageSetNameRef: "4.13.5"
