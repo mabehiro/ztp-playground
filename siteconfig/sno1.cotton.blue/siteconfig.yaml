@@ -56,7 +56,7 @@ spec:
         bootMode: "UEFI"
         rootDeviceHints:
           # deviceName: "/dev/sda"
-          serialNumber: S3L1BTL80000N530A26J
+          serialNumber: PDNMF0ARH9J2U8
         nodeNetwork:
           interfaces:
             - name: "ens1s0"
