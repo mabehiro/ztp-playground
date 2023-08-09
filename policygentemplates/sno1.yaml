@@ -10,87 +10,87 @@ spec:
     sites: "sno1"
   mcp: "master"
   sourceFiles:
-    - fileName: SriovNetwork.yaml
-      policyName: "config-policy"
-      metadata:
-        # for sriov only test
-        name: "mlxnicsnet"
-      spec:
-        resourceName: mlxnicsnet
-        ipam: |-
-          {
-            "type": "whereabouts",
-            "range": "192.168.100.0/30"
-          }  
-    - fileName: SriovNetwork.yaml
-      policyName: "config-policy"
-      metadata:
-        name: "dpdknic1"
-      spec:
-        resourceName: dpdknic1
-        ipam: |-
-          {
-            "type": "whereabouts",
-            "range": "192.168.200.0/30"
-          }
-    - fileName: SriovNetwork.yaml
-      policyName: "config-policy"
-      metadata:
-        name: "dpdknic2"
-      spec:
-        resourceName: dpdknic2
-        ipam: |-
-          {
-            "type": "whereabouts",
-            "range": "192.168.201.0/30"
-          }
-    - fileName: SriovNetworkNodePolicy.yaml
-      policyName: "config-policy"
-      metadata:
-        name: "mlxnicsnet"
-      spec:
-        deviceType: netdevice
-        isRdma: false
-        nicSelector:
-          vendor: "15b3"
-          deviceID: "1015"
-          pfNames: ["ens1f0np0#0-3","ens1f1np1#0-3" ]
-        mtu: 9000
-        numVfs: 8
-        priority: 10
-        resourceName: mlxnicsnet
-    - fileName: SriovNetworkNodePolicy.yaml
-      policyName: "config-policy"
-      metadata:
-        name: "dpdknic1"
-      spec:
-        deviceType: netdevice
-        isRdma: true
-        nicSelector:
-          vendor: "15b3"
-          deviceID: "1015"
-          pfNames: ["ens1f0np0#4-7"]
-          rootDevices: ["0000:06:00.0"]
-        mtu: 9000
-        numVfs: 8
-        priority: 10
-        resourceName: dpdknic1
-    - fileName: SriovNetworkNodePolicy.yaml
-      policyName: "config-policy"
-      metadata:
-        name: "dpdknic2"
-      spec:
-        deviceType: netdevice
-        isRdma: true
-        nicSelector:
-          vendor: "15b3"
-          deviceID: "1015"
-          pfNames: ["ens1f1np1#4-7"]
-          rootDevices: ["0000:06:00.1"]
-        mtu: 9000
-        numVfs: 8
-        priority: 10
-        resourceName: dpdknic2
+    # - fileName: SriovNetwork.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     # for sriov only test
+    #     name: "mlxnicsnet"
+    #   spec:
+    #     resourceName: mlxnicsnet
+    #     ipam: |-
+    #       {
+    #         "type": "whereabouts",
+    #         "range": "192.168.100.0/30"
+    #       }  
+    # - fileName: SriovNetwork.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     name: "dpdknic1"
+    #   spec:
+    #     resourceName: dpdknic1
+    #     ipam: |-
+    #       {
+    #         "type": "whereabouts",
+    #         "range": "192.168.200.0/30"
+    #       }
+    # - fileName: SriovNetwork.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     name: "dpdknic2"
+    #   spec:
+    #     resourceName: dpdknic2
+    #     ipam: |-
+    #       {
+    #         "type": "whereabouts",
+    #         "range": "192.168.201.0/30"
+    #       }
+    # - fileName: SriovNetworkNodePolicy.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     name: "mlxnicsnet"
+    #   spec:
+    #     deviceType: netdevice
+    #     isRdma: false
+    #     nicSelector:
+    #       vendor: "15b3"
+    #       deviceID: "1015"
+    #       pfNames: ["ens1f0np0#0-3","ens1f1np1#0-3" ]
+    #     mtu: 9000
+    #     numVfs: 8
+    #     priority: 10
+    #     resourceName: mlxnicsnet
+    # - fileName: SriovNetworkNodePolicy.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     name: "dpdknic1"
+    #   spec:
+    #     deviceType: netdevice
+    #     isRdma: true
+    #     nicSelector:
+    #       vendor: "15b3"
+    #       deviceID: "1015"
+    #       pfNames: ["ens1f0np0#4-7"]
+    #       rootDevices: ["0000:06:00.0"]
+    #     mtu: 9000
+    #     numVfs: 8
+    #     priority: 10
+    #     resourceName: dpdknic1
+    # - fileName: SriovNetworkNodePolicy.yaml
+    #   policyName: "config-policy"
+    #   metadata:
+    #     name: "dpdknic2"
+    #   spec:
+    #     deviceType: netdevice
+    #     isRdma: true
+    #     nicSelector:
+    #       vendor: "15b3"
+    #       deviceID: "1015"
+    #       pfNames: ["ens1f1np1#4-7"]
+    #       rootDevices: ["0000:06:00.1"]
+    #     mtu: 9000
+    #     numVfs: 8
+    #     priority: 10
+    #     resourceName: dpdknic2
     #Adding lvm
     - fileName: lvm/namespace.yaml
       remediationAction: enforce

@@ -1,6 +1,6 @@
 generators:
 - common-ranGen.yaml
-- group-du-sno-ranGen.yaml
+# - group-du-sno-ranGen.yaml
 - sno1.yaml
 resources:
 - policies
