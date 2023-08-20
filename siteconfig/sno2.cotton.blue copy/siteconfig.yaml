@@ -9,16 +9,18 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   baseDomain: "cotton.blue"
+  automatedCleaningMode: metadata
   pullSecretRef:
     name: "assisted-deployment-pull-secret"
-  clusterImageSetNameRef: "img4.10.24-x86-64-appsub"
+  clusterImageSetNameRef: "4.13.5"
   sshPublicKey: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDaqy7YhU9yx28InBRttTWDrsAMqn1txv4Z7ObxrK5ywlILf8LZdWMf8AehwMcxYrkwfC5G48dej6lKXkopQwmu7HCvTtVeU8gn07J6kSl3riAGsbX1wbuCiCjxIXUtHDZUCqc/ZUF/b6efGW0xcmc3fg3xgSWz3YYsH4zWxv211ISfavOjHTHQuVr7ibzEGJrz5S4xJJAY8v9XaYkxbUcaMm2IUFQG7S3RRMywMCSvyhUlPM6/btIVKXfiPy3+nnXhtll2zM3OIVSLOwGQDYhwRxP9TX3vyxidekmxk2gor1aL8S364nNipZITXx5hMHRWrtAX+bgb3FHDdRn9BEYOPLvPVNPKfFZiNULp9ar9QrV1wcfWYGuJ9QSkwfDuRkWVD3KgoZpLEsujP6eAGacyh8jhcv/M5SY5L/sPiX8fklBNWLSuPpMhZAAM1LeKz8iV/GK3jDdVA7nhG7MTRAB0RHnRljDkGcfiEbB+9VmAf+NrfmorPYDL/24o8n1R7tk= mabe@utility.mabe.com"
   clusters:
   - clusterName: "sno2"
     networkType: "OVNKubernetes"
+    extraManifestPath: extra-manifests
     clusterLabels:
       # These example cluster labels correspond to the bindingRules in the PolicyGenTemplate examples
-      du-profile: "v4.10"
+      du-profile: ""
       # These example cluster labels correspond to the bindingRules in the PolicyGenTemplate examples in ../policygentemplates:
       # ../policygentemplates/common-ranGen.yaml will apply to all clusters with 'common: true'
       common: true
@@ -36,6 +38,7 @@ spec:
       - 172.30.0.0/16
     additionalNTPSources:
       - clock.redhat.com
+    ignitionConfigOverride: '{"ignition":{"version":"3.2.0"},"passwd":{"users":[{"name":"core","passwordHash":"$6$AMb00Izb98UzzDII$nTsI8Q3264XOFa.D15WDajrM.4P1LtWLsH2eYYGbnQvl8jswtzfyYsv46WfzSJnAeZ4j1swrBhlYitPQSYlV01"}]}}'
     #additionalNTPSources:
     #  - 1111:2222:3333:4444::2
     # Optionally; This can be used to override the KlusterletAddonConfig that is creted for this cluster:
@@ -44,17 +47,22 @@ spec:
     nodes:
       - hostName: "sno2.cotton.blue"
         role: "master"
-        bmcAddress: "redfish-virtualmedia+http://192.168.1.102:8000/redfish/v1/Systems/b25da76f-58c0-449e-ba53-79d6ed330287"
+        bmcAddress: idrac-virtualmedia+https://192.168.1.63/redfish/v1/Systems/System.Embedded.1
         bmcCredentialsName:
           name: "sno-bmc-secret"
-        bootMACAddress: "52:54:00:67:bb:ee"
+        bootMACAddress: "C8:1F:66:D0:99:F0"
         bootMode: "UEFI"
         rootDeviceHints:
-          deviceName: "/dev/vda"
+          # deviceName: "/dev/sda"
+          byPath: "pci-0000:03:00.0-scsi-0:2:0:0"
         nodeNetwork:
           interfaces:
             - name: "ens1s0"
-              macAddress: "52:54:00:67:bb:ee"
+              macAddress: "C8:1F:66:D0:99:F0"
+            - name: "enp5s0f0"
+              macAddress: "08:c0:eb:d2:c2:7e"
+            - name: "enp5s0f1"
+              macAddress: "08:c0:eb:d2:c2:7f"
           config:
             interfaces:
               - name: ens1s0
@@ -64,8 +72,20 @@ spec:
                   enabled: true
                   dhcp: false
                   address:
-                  - ip: 192.168.1.180
+                  - ip: 192.168.1.171
                     prefix-length: 24
+              - name: enp5s0f0
+                type: ethernet
+                state: down
+                ipv4:
+                  enabled: false
+                  dhcp: false
+              - name: enp5s0f1
+                type: ethernet
+                state: down
+                ipv4:
+                  enabled: false
+                  dhcp: false
             dns-resolver:
                config:
                  search:

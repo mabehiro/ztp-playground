@@ -2,6 +2,7 @@ generators:
 - common-ranGen.yaml
 # - group-du-sno-ranGen.yaml
 - sno1.yaml
+- sno2.yaml
 resources:
 - policies
 - ns.yaml
