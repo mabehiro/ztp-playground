@@ -53,8 +53,8 @@ spec:
         bootMACAddress: "C8:1F:66:D0:99:F0"
         bootMode: "UEFI"
         rootDeviceHints:
-          # deviceName: "/dev/sda"
-          byPath: "pci-0000:03:00.0-scsi-0:2:0:0"
+          deviceName: "/dev/sda"
+          # byPath: "pci-0000:03:00.0-scsi-0:2:0:0"
         nodeNetwork:
           interfaces:
             - name: "ens1s0"
