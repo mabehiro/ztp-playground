@@ -47,7 +47,9 @@ spec:
     nodes:
       - hostName: "sno2.cotton.blue"
         role: "master"
-        bmcAddress: idrac-virtualmedia+https://192.168.1.63/redfish/v1/Systems/System.Embedded.1
+        # bmcAddress: idrac-virtualmedia+https://192.168.1.63/redfish/v1/Systems/System.Embedded.1
+        bmcAddress: idrac-virtualmedia://192.168.1.63/redfish/v1/Systems/System.Embedded.1
+        disableCertificateVerification: True
         bmcCredentialsName:
           name: "sno-bmc-secret"
         bootMACAddress: "C8:1F:66:D0:99:F0"
