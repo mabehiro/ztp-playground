@@ -96,7 +96,7 @@ spec:
             routes:
               config:
               - destination: 0.0.0.0/0
-                next-hop-interface: ens1s0
+                next-hop-interface: eno1
                 next-hop-address: 192.168.1.1
                 table-id: 254
         # diskPartition:
