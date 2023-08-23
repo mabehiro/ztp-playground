@@ -58,15 +58,15 @@ spec:
           byPath: "pci-0000:03:00.0-scsi-0:2:0:0"
         nodeNetwork:
           interfaces:
-            - name: "ens1s0"
+            - name: "eno1"
               macAddress: "C8:1F:66:D0:99:F0"
-            - name: "enp5s0f0"
+            - name: "enp5s0f0np0"
               macAddress: "08:c0:eb:d2:c2:7e"
-            - name: "enp5s0f1"
+            - name: "enp5s0f1np1"
               macAddress: "08:c0:eb:d2:c2:7f"
           config:
             interfaces:
-              - name: ens1s0
+              - name: eno1
                 type: ethernet
                 state: up
                 ipv4:
@@ -75,13 +75,13 @@ spec:
                   address:
                   - ip: 192.168.1.171
                     prefix-length: 24
-              - name: enp5s0f0
+              - name: enp5s0f0np0
                 type: ethernet
                 state: down
                 ipv4:
                   enabled: false
                   dhcp: false
-              - name: enp5s0f1
+              - name: enp5s0f1np1
                 type: ethernet
                 state: down
                 ipv4:
