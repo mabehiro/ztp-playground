@@ -13,3 +13,4 @@ spec:
         operator: In
         values:
           - "sno1"
+          - "sno2"
