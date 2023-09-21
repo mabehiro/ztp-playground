@@ -22,6 +22,6 @@ spec:
                   ConditionFirstBoot=yes
                   [Service]
                   Type=oneshot
-                  ExecStart=/usr/bin/bash -c "sgdisk -Z /dev/disk/by-path/pci-0000:0a:00.0-scsi-0:1:0:1"
+                  ExecStart=/usr/bin/bash -c "sgdisk -Z /dev/disk/by-path/pci-0000:0a:00.0-scsi-0:1:0:0"
                   [Install]
                   WantedBy=multi-user.target
