@@ -54,7 +54,8 @@ spec:
           name: "sno-bmc-secret"
         bootMACAddress: "98:f2:b3:ed:9e:58"
         bootMode: "UEFI"
-        # rootDeviceHints:
+        rootDeviceHints:
+          deviceName: /dev/sda
           # deviceName: "/dev/disk/by-path/pci-0000:0a:00.0-scsi-0:1:0:1"
           # serialNumber: 3600508b1001c152315a9ff023826e090
           # serialNumber: S3L1BTL80000N530A26J
